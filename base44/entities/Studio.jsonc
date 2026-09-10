@@ -1,0 +1,82 @@
+{
+  "name": "Studio",
+  "properties": {
+    "city": {
+      "type": "string"
+    },
+    "logo_url": {
+      "format": "uri",
+      "type": "string"
+    },
+    "name": {
+      "description": "Studio or photographer business name",
+      "type": "string"
+    },
+    "owner_email": {
+      "description": "Email of the studio owner user",
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "photo_credits": {
+      "default": 5000,
+      "description": "Photos remaining on current plan",
+      "type": "number"
+    },
+    "plan": {
+      "default": "trial",
+      "enum": [
+        "trial",
+        "active",
+        "expired"
+      ],
+      "type": "string"
+    },
+    "r2_prefix": {
+      "description": "Unique storage prefix, e.g. studio_a1b2c3",
+      "type": "string"
+    },
+    "watermark_url": {
+      "format": "uri",
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "owner_email",
+    "r2_prefix"
+  ],
+  "rls": {
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  },
+  "type": "object"
+}

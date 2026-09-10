@@ -1,0 +1,67 @@
+{
+  "name": "JobQueue",
+  "properties": {
+    "attempts": {
+      "default": 0,
+      "type": "number"
+    },
+    "error": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "finished_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "status": {
+      "default": "pending",
+      "enum": [
+        "pending",
+        "running",
+        "done",
+        "failed"
+      ],
+      "type": "string"
+    },
+    "type": {
+      "default": "index",
+      "enum": [
+        "index",
+        "reindex"
+      ],
+      "type": "string"
+    },
+    "worker_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "type",
+    "status"
+  ],
+  "rls": {
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  },
+  "type": "object"
+}

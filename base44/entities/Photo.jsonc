@@ -1,0 +1,91 @@
+{
+  "name": "Photo",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "face_count": {
+      "default": 0,
+      "type": "number"
+    },
+    "file_size": {
+      "type": "number"
+    },
+    "height": {
+      "type": "number"
+    },
+    "original_filename": {
+      "type": "string"
+    },
+    "preview_key": {
+      "description": "1600px watermarked preview key, set by worker",
+      "type": "string"
+    },
+    "r2_key": {
+      "description": "Object key of the original in R2",
+      "type": "string"
+    },
+    "sort_order": {
+      "default": 0,
+      "type": "number"
+    },
+    "status": {
+      "default": "uploaded",
+      "enum": [
+        "uploaded",
+        "processed",
+        "failed"
+      ],
+      "type": "string"
+    },
+    "studio_id": {
+      "type": "string"
+    },
+    "taken_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "thumb_key": {
+      "description": "400px webp thumbnail key, set by worker",
+      "type": "string"
+    },
+    "width": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "event_id",
+    "r2_key"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  },
+  "type": "object"
+}

@@ -1,0 +1,60 @@
+{
+  "name": "GuestSession",
+  "properties": {
+    "consent_given": {
+      "default": false,
+      "description": "DPDP biometric consent \u2014 must be true",
+      "type": "boolean"
+    },
+    "consent_timestamp": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "error": {
+      "description": "e.g. no_face_detected",
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string"
+    },
+    "match_count": {
+      "default": 0,
+      "type": "number"
+    },
+    "matched_photo_ids": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "phone": {
+      "description": "Optional, for WhatsApp delivery",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "consent_given"
+  ],
+  "rls": {
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  },
+  "type": "object"
+}

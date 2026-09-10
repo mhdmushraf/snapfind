@@ -1,0 +1,106 @@
+{
+  "name": "Event",
+  "properties": {
+    "allow_download": {
+      "default": false,
+      "type": "boolean"
+    },
+    "allow_full_gallery": {
+      "default": true,
+      "type": "boolean"
+    },
+    "cover_photo_id": {
+      "type": "string"
+    },
+    "event_date": {
+      "format": "date",
+      "type": "string"
+    },
+    "expires_on": {
+      "format": "date",
+      "type": "string"
+    },
+    "faces_indexed": {
+      "default": 0,
+      "type": "number"
+    },
+    "name": {
+      "description": "e.g. Anjali & Rahul Wedding",
+      "type": "string"
+    },
+    "password": {
+      "description": "Optional guest access password",
+      "type": "string"
+    },
+    "photo_count": {
+      "default": 0,
+      "type": "number"
+    },
+    "photos_processed": {
+      "default": 0,
+      "type": "number"
+    },
+    "qr_slug": {
+      "description": "Unique 8-char public slug used in QR URL",
+      "type": "string"
+    },
+    "status": {
+      "default": "draft",
+      "enum": [
+        "draft",
+        "uploading",
+        "processing",
+        "live",
+        "expired"
+      ],
+      "type": "string"
+    },
+    "studio_id": {
+      "description": "Studio entity id",
+      "type": "string"
+    },
+    "venue": {
+      "type": "string"
+    },
+    "watermark_previews": {
+      "default": true,
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "studio_id",
+    "name",
+    "qr_slug"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  },
+  "type": "object"
+}

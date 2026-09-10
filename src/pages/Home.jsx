@@ -70,6 +70,7 @@ const FEATURES = [
   { icon: Printer, title: 'Earn from every gallery', body: 'Guests order prints and full-res downloads. You keep 70% without lifting a finger.' },
   { icon: Film, title: 'Same-night reel', body: 'Top 30 frames, music, vertical export. On Instagram before the sadya is cleared.' },
   { icon: MessageCircle, title: 'WhatsApp built in', body: 'Guests get their gallery link on WhatsApp. Every share is a referral for your studio.' },
+  { icon: Users, title: 'Every tradition, one tool', body: 'Nikah and walima, muhurtam and sadya, church and reception. Multi-day, multi-function, one QR.' },
   { icon: Palette, title: 'Your brand, not ours', body: 'Your logo, colours and watermark on every preview. Guests remember the studio, not the software.' },
   { icon: Shield, title: 'DPDP-ready consent', body: 'Explicit consent before every selfie. Selfies deleted in 24 hours. Face data deleted on expiry.' },
 ];
@@ -95,7 +96,7 @@ export default function Home() {
               Every guest finds their own photos <span className="text-primary">in seconds.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted-foreground leading-relaxed">
-              Upload once. Share a QR code. Guests take a selfie and get only the photos they are in. No app, no login, no sending 3,000 photos on WhatsApp.
+              Upload once. Share a QR code. Guests take a selfie and get only the photos they are in. No app, no login, no sending 3,000 photos on WhatsApp. Nikah or muhurtam, Malabar or Madurai — every tradition, one tool.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Link to="/register" className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-accent text-accent-foreground font-semibold hover:opacity-90 transition">

@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Aperture } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Logo from '@/components/Logo';
 
 const links = [
-  { label: 'Home', path: '/' },
-  { label: 'About', path: '/about' },
-  { label: 'Services', path: '/services' },
-  { label: 'Gallery', path: '/gallery' },
+  { label: 'How it works', path: '/how-it-works' },
+  { label: 'Features', path: '/features' },
   { label: 'Pricing', path: '/pricing' },
-  { label: 'Journal', path: '/journal' },
+  { label: 'For Photographers', path: '/for-photographers' },
+  { label: 'Blog', path: '/blog' },
   { label: 'Contact', path: '/contact' },
 ];
 
@@ -33,10 +33,7 @@ export default function Navbar() {
       scrolled ? 'bg-background/85 backdrop-blur-md border-b border-border/70' : 'bg-transparent'
     )}>
       <nav className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <Aperture className="w-6 h-6 text-accent group-hover:rotate-90 transition-transform duration-500" strokeWidth={1.5} />
-          <span className="font-heading text-xl font-semibold tracking-tight">Lumière</span>
-        </Link>
+        <Logo />
 
         <div className="hidden md:flex items-center gap-1">
           {links.map((l) => (
@@ -54,8 +51,8 @@ export default function Navbar() {
           <Link to="/login" className="ml-2 px-4 py-2 text-sm font-medium rounded-full border border-foreground/15 hover:border-foreground/40 transition-colors">
             Sign in
           </Link>
-          <Link to="/register" className="px-4 py-2 text-sm font-medium rounded-full bg-primary text-primary-foreground hover:opacity-90 transition-opacity">
-            Join as photographer
+          <Link to="/register" className="px-4 py-2 text-sm font-semibold rounded-full bg-accent text-accent-foreground hover:opacity-90 transition-opacity">
+            Start free
           </Link>
         </div>
 
@@ -74,7 +71,7 @@ export default function Navbar() {
             ))}
             <div className="flex gap-2 mt-2">
               <Link to="/login" className="flex-1 text-center py-2.5 text-sm rounded-full border border-foreground/15">Sign in</Link>
-              <Link to="/register" className="flex-1 text-center py-2.5 text-sm rounded-full bg-primary text-primary-foreground">Join</Link>
+              <Link to="/register" className="flex-1 text-center py-2.5 text-sm font-semibold rounded-full bg-accent text-accent-foreground">Start free</Link>
             </div>
           </div>
         </div>

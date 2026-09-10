@@ -124,5 +124,4 @@
   .ken-burns { animation: ken-burns 22s ease-in-out infinite alternate; }
   @keyframes scan { 0% { top: 0 } 100% { top: 100% } }
   .scan-line { position:absolute; left:0; right:0; height:2px; background: linear-gradient(90deg, transparent, hsl(9 92% 62%), transparent); animation: scan 3.5s linear infinite; }
-  }
 }

@@ -30,6 +30,16 @@ const PLANS = [
     features: ['Everything in Per event', '2 team members', 'Priority indexing', 'Custom gallery domain', 'Email + WhatsApp support'],
     cta: 'Go Pro',
     to: '/register',
+    hidden: true,
+  },
+  {
+    name: 'Season pass',
+    price: '₹4,999',
+    unit: 'Nov – May · unlimited events · 120,000 photos',
+    tagline: 'One price for the whole wedding season. Pause in the monsoon.',
+    features: ['Everything in Per event', 'Unlimited events for 7 months', '2 team members', 'Priority indexing', 'Renews each October, or not'],
+    cta: 'Get season pass',
+    to: '/register',
   },
   {
     name: 'Studio',
@@ -89,7 +99,7 @@ export default function Pricing() {
       </section>
 
       <section className="max-w-7xl mx-auto px-5 sm:px-8 pb-16 grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-        {PLANS.map((p) => (
+        {PLANS.filter((p) => !p.hidden).map((p) => (
           <div key={p.name} className={`relative rounded-3xl border p-8 flex flex-col ${p.popular ? 'border-accent shadow-xl shadow-accent/10' : 'border-border'}`}>
             {p.popular && <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-accent text-accent-foreground text-xs font-semibold">Most popular</span>}
             <h3 className="font-heading text-xl font-semibold">{p.name}</h3>
@@ -110,6 +120,29 @@ export default function Pricing() {
         ))}
       </section>
 
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 pb-24">
+        <div className="rounded-3xl bg-primary text-primary-foreground p-10 sm:p-14 grid lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Earn back your fee</span>
+            <h2 className="font-heading text-3xl sm:text-4xl font-bold mt-3 text-balance">Most photographers make more from Snapfind than they pay it.</h2>
+            <p className="mt-4 text-primary-foreground/80">Guests order prints and full-resolution downloads straight from their gallery. You keep 70%. We handle payment, printing and delivery.</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              ['₹49', 'per full-res download · you keep ₹34'],
+              ['₹299+', 'per print or frame · you keep 70%'],
+              ['300', 'guests at a typical wedding'],
+              ['₹600–1,500', 'typical studio earning per wedding'],
+            ].map(([n, l]) => (
+              <div key={l} className="rounded-2xl bg-primary-foreground/10 p-5">
+                <div className="font-heading text-2xl font-bold">{n}</div>
+                <div className="text-xs text-primary-foreground/70 mt-1">{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="max-w-4xl mx-auto px-5 sm:px-8 pb-24">
         <h2 className="font-heading text-2xl sm:text-3xl font-bold text-center">How we compare</h2>
         <p className="mt-2 text-sm text-muted-foreground text-center">Public list prices as shown on each platform's website, September 2026.</p>
@@ -125,7 +158,7 @@ export default function Pricing() {
             </thead>
             <tbody className="divide-y divide-border">
               {[
-                ['Snapfind', '₹499 / event or ₹6,499 / yr', '₹0.06–0.065', 'Free 5,000 photos'],
+                ['Snapfind', '₹499 / event or ₹4,999 / season', '₹0.04–0.06', 'Free 5,000 photos + earn on prints'],
                 ['Kwikpic', '₹7,490 / yr (100k photos)', '₹0.075', 'Free trial'],
                 ['mAlbum', '₹0.10 / photo', '₹0.10', 'No monthly fee'],
                 ['MyPhotoStudio', '₹1,000 / event', 'unlimited', 'Per-event only'],

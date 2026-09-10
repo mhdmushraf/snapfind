@@ -50,11 +50,15 @@ const AuthenticatedApp = () => {
       <Route path="/register" element={<Register />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/how-it-works" element={<Navigate to="/#how-it-works" replace />} />
         <Route path="/about" element={<About />} />
-        <Route path="/services" element={<Services />} />
+        <Route path="/for-photographers" element={<About />} />
+        <Route path="/features" element={<Services />} />
+        <Route path="/services" element={<Navigate to="/features" replace />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/pricing" element={<Pricing />} />
-        <Route path="/journal" element={<Blog />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/journal" element={<Navigate to="/blog" replace />} />
         <Route path="/contact" element={<Contact />} />
       </Route>
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>

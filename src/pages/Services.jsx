@@ -25,6 +25,16 @@ const GROUPS = [
     ],
   },
   {
+    title: 'Cull',
+    blurb: 'Skip the 6 hours of deleting blinks and duplicates.',
+    image: IMG.groomRites,
+    items: [
+      [Zap, 'Burst de-duplication', 'Groups near-identical frames and picks the sharpest. You review one, not nine.'],
+      [ScanFace, 'Closed eyes + blur flags', 'Every frame gets a quality score. Hide the bottom 20% with one toggle before guests ever see it.'],
+      [Download, 'Your call, always', 'Culling only suggests. Nothing is deleted until you say so.'],
+    ],
+  },
+  {
     title: 'Share',
     blurb: 'One QR code does the work of three weeks of WhatsApp forwarding.',
     image: IMG.hero,

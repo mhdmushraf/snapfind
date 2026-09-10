@@ -27,7 +27,7 @@ const GROUPS = [
   {
     title: 'Cull',
     blurb: 'Skip the 6 hours of deleting blinks and duplicates.',
-    image: IMG.jaymal,
+    image: IMG.crowning,
     items: [
       [Zap, 'Burst de-duplication', 'Groups near-identical frames and picks the sharpest. You review one, not nine.'],
       [ScanFace, 'Closed eyes + blur flags', 'Every frame gets a quality score. Hide the bottom 20% with one toggle before guests ever see it.'],
@@ -37,7 +37,7 @@ const GROUPS = [
   {
     title: 'Share',
     blurb: 'One QR code does the work of three weeks of WhatsApp forwarding.',
-    image: IMG.crowning,
+    image: IMG.jaymal,
     items: [
       [QrCode, 'Printable QR + link', 'Put it on table cards, the LED wall, or the thank-you note. No app, no login.'],
       [MessageCircle, 'WhatsApp delivery', 'Guests get their gallery link on WhatsApp. Every share is a referral for your studio.'],
@@ -59,7 +59,7 @@ const GROUPS = [
   {
     title: 'Earn',
     blurb: 'Guests pay for what they love. You keep most of it.',
-    image: IMG.familyDance,
+    image: IMG.baraat,
     items: [
       [Printer, 'Print orders from the gallery', 'A guest sees their 40 photos and orders a frame or album. You earn on every order without touching it.'],
       [IndianRupee, 'Full-res download upsell', 'Free watermarked previews, paid full-resolution downloads. Split 70/30 in your favour.'],
@@ -70,7 +70,7 @@ const GROUPS = [
   {
     title: 'Run the studio',
     blurb: 'Every function, every community, in one place.',
-    image: IMG.mandapam,
+    image: IMG.crowning,
     items: [
       [Layers, 'Multi-event packages', 'Nikah, walima, haldi, sangeet, reception — one project, one QR, separate galleries.'],
       [Eye, 'Delivery tracker', 'Who has seen their photos, who downloaded, who hasn’t opened. Nudge them on WhatsApp in one tap.'],
@@ -108,8 +108,8 @@ export default function Features() {
             <img src={IMG.crowning} alt="Kerala Christian wedding crowning" className="w-full h-40 object-cover rounded-2xl" />
           </div>
           <div className="space-y-3 pt-8">
-            <img src={IMG.mandapam} alt="Hindu bride at the mandapam" className="w-full h-40 object-cover rounded-2xl" />
-            <img src={IMG.familyDance} alt="Family dancing at the wedding" className="w-full h-56 object-cover rounded-2xl" />
+            <img src={IMG.garland} alt="Garland exchange at a South Indian wedding" className="w-full h-40 object-cover rounded-2xl" />
+            <img src={IMG.baraat} alt="Baraat procession" className="w-full h-56 object-cover rounded-2xl" />
           </div>
         </div>
       </section>

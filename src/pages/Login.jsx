@@ -26,8 +26,8 @@ export default function Login() {
     <div className="min-h-screen grid lg:grid-cols-[1.1fr_1fr] bg-background">
       {/* Visual panel */}
       <div className="relative hidden lg:block overflow-hidden bg-primary">
-        <img src={IMG.baraat} alt="" className="absolute inset-0 w-full h-full object-cover opacity-80 ken-burns" />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/40 to-transparent" />
+        <img src={IMG.hero} alt="" className="absolute inset-0 w-full h-full object-cover ken-burns" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/30 to-transparent" />
 
         {/* floating result card */}
         <div className="absolute top-14 right-10 w-72 rounded-2xl bg-background/95 backdrop-blur shadow-2xl p-4 animate-[float_6s_ease-in-out_infinite]">
@@ -39,7 +39,7 @@ export default function Login() {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-1.5 mt-3">
-            {[IMG.hero, IMG.groomRites, IMG.muhurtam, IMG.jewelry].map((s, i) => (
+            {[IMG.garland, IMG.groomRites, IMG.muhurtam, IMG.jewelry].map((s, i) => (
               <img key={i} src={s} alt="" className="aspect-square object-cover rounded-md" />
             ))}
           </div>
@@ -57,7 +57,7 @@ export default function Login() {
         </div>
 
         {/* whatsapp bubble */}
-        <div className="absolute bottom-16 left-10 flex items-center gap-2 rounded-full bg-background/95 backdrop-blur shadow-xl pl-2 pr-4 py-2 animate-[float_5s_ease-in-out_infinite_2s]">
+        <div className="absolute top-28 left-10 flex items-center gap-2 rounded-full bg-background/95 backdrop-blur shadow-xl pl-2 pr-4 py-2 animate-[float_5s_ease-in-out_infinite_2s]">
           <div className="w-8 h-8 rounded-full bg-[#25D366]/15 flex items-center justify-center"><MessageCircle className="w-4 h-4 text-[#25D366]" /></div>
           <span className="text-xs font-medium">Gallery link sent on WhatsApp</span>
         </div>
@@ -65,7 +65,7 @@ export default function Login() {
         <div className="absolute top-10 left-10 text-primary-foreground">
           <Logo inverted />
         </div>
-        <div className="absolute bottom-0 left-0 right-0 p-10 text-primary-foreground">
+        <div className="absolute bottom-0 left-0 right-0 p-10 pr-72 text-primary-foreground bg-gradient-to-t from-primary/90 to-transparent">
           <p className="font-heading text-3xl font-semibold max-w-md leading-snug">Welcome back. Your guests are waiting.</p>
         </div>
 

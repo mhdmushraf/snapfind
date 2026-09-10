@@ -26,7 +26,7 @@ export default function Login() {
     <div className="min-h-screen grid lg:grid-cols-[1.1fr_1fr] bg-background">
       {/* Visual panel */}
       <div className="relative hidden lg:block overflow-hidden bg-primary">
-        <img src={IMG.baraat} alt="" className="absolute inset-0 w-full h-full object-cover opacity-80" />
+        <img src={IMG.baraat} alt="" className="absolute inset-0 w-full h-full object-cover opacity-80 ken-burns" />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/40 to-transparent" />
 
         {/* floating result card */}
@@ -69,12 +69,14 @@ export default function Login() {
           <p className="font-heading text-3xl font-semibold max-w-md leading-snug">Welcome back. Your guests are waiting.</p>
         </div>
 
-        <style>{`@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}`}</style>
+        <style>{``}</style>
       </div>
 
       {/* Form panel */}
-      <div className="flex items-center justify-center px-6 py-16">
-        <div className="w-full max-w-sm">
+      <div className="relative flex items-center justify-center px-6 py-16 bg-mesh overflow-hidden">
+        <div className="blob w-72 h-72 bg-accent/30 -top-20 -right-20" />
+        <div className="blob w-80 h-80 bg-primary/30 -bottom-24 -left-16" style={{ animationDelay: '-9s' }} />
+        <div className="relative w-full max-w-sm rounded-3xl bg-background/80 backdrop-blur-xl border border-white/60 shadow-xl shadow-primary/5 p-8">
           <Logo className="mb-10 lg:hidden" />
           <h1 className="font-heading text-3xl font-bold">Sign in</h1>
           <p className="mt-2 text-sm text-muted-foreground">Access your Snapfind studio dashboard.</p>
@@ -83,15 +85,15 @@ export default function Login() {
             <label className="block">
               <span className="text-xs uppercase tracking-wider text-muted-foreground">Email</span>
               <div className="relative mt-2">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="input pl-11" placeholder="you@studio.com" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10 pointer-events-none" />
+                <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="input input-icon" placeholder="you@studio.com" />
               </div>
             </label>
             <label className="block">
               <span className="text-xs uppercase tracking-wider text-muted-foreground">Password</span>
               <div className="relative mt-2">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <input type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="input pl-11" placeholder="••••••••" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10 pointer-events-none" />
+                <input type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="input input-icon" placeholder="••••••••" />
               </div>
             </label>
             <div className="flex justify-end">

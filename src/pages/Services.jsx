@@ -7,7 +7,7 @@ const GROUPS = [
   {
     title: 'Upload',
     blurb: 'Get 10,000 photos from your laptop to the cloud without babysitting it.',
-    image: IMG.garland,
+    image: IMG.baraat,
     items: [
       [Upload, 'Drag the whole folder', 'JPEG, PNG, HEIC, WebP up to 50 MB each. Thousands at a time.'],
       [Zap, 'Resumable uploads', 'Venue Wi-Fi drops? Upload picks up where it stopped. Nothing restarts.'],
@@ -17,7 +17,7 @@ const GROUPS = [
   {
     title: 'Find',
     blurb: 'Open-source face recognition, tuned on Indian weddings.',
-    image: IMG.muhurtam,
+    image: IMG.garland,
     items: [
       [ScanFace, 'Selfie search', 'A guest takes one selfie and gets every photo they appear in. Under two seconds.'],
       [BarChart3, 'Strict matching', 'Threshold tuned so cousins do not get each other’s photos. Full gallery is one tap away.'],
@@ -27,7 +27,7 @@ const GROUPS = [
   {
     title: 'Cull',
     blurb: 'Skip the 6 hours of deleting blinks and duplicates.',
-    image: IMG.groomRites,
+    image: IMG.jaymal,
     items: [
       [Zap, 'Burst de-duplication', 'Groups near-identical frames and picks the sharpest. You review one, not nine.'],
       [ScanFace, 'Closed eyes + blur flags', 'Every frame gets a quality score. Hide the bottom 20% with one toggle before guests ever see it.'],
@@ -37,7 +37,7 @@ const GROUPS = [
   {
     title: 'Share',
     blurb: 'One QR code does the work of three weeks of WhatsApp forwarding.',
-    image: IMG.hero,
+    image: IMG.crowning,
     items: [
       [QrCode, 'Printable QR + link', 'Put it on table cards, the LED wall, or the thank-you note. No app, no login.'],
       [MessageCircle, 'WhatsApp delivery', 'Guests get their gallery link on WhatsApp. Every share is a referral for your studio.'],
@@ -48,7 +48,7 @@ const GROUPS = [
   {
     title: 'Deliver smarter',
     blurb: 'Once we know who is in every frame, the boring sorting does itself.',
-    image: IMG.imamZamin,
+    image: IMG.mehndi,
     items: [
       [Heart, 'Couple album, auto-built', 'Every frame with both bride and groom, ranked by quality. The album shortlist before you open Lightroom.'],
       [Layers, 'Family sets', 'Bride’s side and groom’s side grouped automatically from who appears with whom.'],
@@ -59,7 +59,7 @@ const GROUPS = [
   {
     title: 'Earn',
     blurb: 'Guests pay for what they love. You keep most of it.',
-    image: IMG.jewelry,
+    image: IMG.familyDance,
     items: [
       [Printer, 'Print orders from the gallery', 'A guest sees their 40 photos and orders a frame or album. You earn on every order without touching it.'],
       [IndianRupee, 'Full-res download upsell', 'Free watermarked previews, paid full-resolution downloads. Split 70/30 in your favour.'],
@@ -105,11 +105,11 @@ export default function Features() {
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-3">
             <img src={IMG.nikah} alt="Nikah ceremony" className="w-full h-56 object-cover rounded-2xl" />
-            <img src={IMG.keralaBoys} alt="Kerala wedding party" className="w-full h-40 object-cover rounded-2xl" />
+            <img src={IMG.crowning} alt="Kerala Christian wedding crowning" className="w-full h-40 object-cover rounded-2xl" />
           </div>
           <div className="space-y-3 pt-8">
-            <img src={IMG.hero} alt="Hindu bride at the mandapam" className="w-full h-40 object-cover rounded-2xl" />
-            <img src={IMG.familyDance} alt="Family dancing at a wedding" className="w-full h-56 object-cover rounded-2xl" />
+            <img src={IMG.mandapam} alt="Hindu bride at the mandapam" className="w-full h-40 object-cover rounded-2xl" />
+            <img src={IMG.walima} alt="Muslim wedding reception" className="w-full h-56 object-cover rounded-2xl" />
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Upload, QrCode, ScanFace, MessageCircle, Shield, Zap, Palette, Download, Clock, Users, CheckCircle2, Bell, Heart, Printer, Film, Scissors } from 'lucide-react';
 import { LogoMark } from '@/components/Logo';
+import { IMG, GALLERY } from '@/lib/images';
 
 /* ---------- Phone mockup: guest flow, pure CSS/SVG, no external images ---------- */
 function PhoneMock() {
@@ -30,14 +31,8 @@ function PhoneMock() {
               <CheckCircle2 className="w-5 h-5 text-accent" />
             </div>
             <div className="grid grid-cols-3 gap-1.5">
-              {tiles.map((_, i) => (
-                <div
-                  key={i}
-                  className="aspect-square rounded-lg"
-                  style={{
-                    background: `linear-gradient(${135 + i * 20}deg, hsl(180 45% ${72 - (i % 3) * 8}%), hsl(9 80% ${78 - (i % 4) * 6}%))`,
-                  }}
-                />
+              {GALLERY.slice(0, 9).concat(GALLERY.slice(0, 1)).slice(0, 9).map((g, i) => (
+                <img key={i} src={g.src} alt="" className="aspect-square w-full object-cover rounded-lg" />
               ))}
             </div>
             <div className="mt-3 flex gap-2">
@@ -108,7 +103,11 @@ export default function Home() {
             </div>
             <p className="mt-5 text-xs text-muted-foreground">No credit card. Made in Kerala for Indian weddings.</p>
           </div>
-          <PhoneMock />
+          <div className="relative">
+            <PhoneMock />
+            <img src={IMG.nikah} alt="Nikah ceremony" className="hidden xl:block absolute -left-16 top-8 w-40 h-52 object-cover rounded-2xl shadow-2xl -rotate-6" />
+            <img src={IMG.crowning} alt="Kerala Christian wedding" className="hidden xl:block absolute -right-12 bottom-16 w-36 h-44 object-cover rounded-2xl shadow-2xl rotate-6" />
+          </div>
         </div>
       </section>
 
@@ -153,20 +152,26 @@ export default function Home() {
           <div>
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Why photographers switch</span>
             <h2 className="font-heading text-3xl sm:text-5xl font-bold mt-3 text-balance">You shot 8,000 photos. Every guest wants the 40 with them in it.</h2>
+            <ul className="mt-8 space-y-4 text-primary-foreground/85">
+              {[
+                'No more "send me my photos" messages for three weeks after the wedding.',
+                'No more Google Drive links that expire, get forwarded, or leak the whole album.',
+                'No more manually sorting family sets for each side of the wedding.',
+                'Every guest who scans your QR sees your studio name. That is 500 people who now know who shot the wedding.',
+              ].map((t) => (
+                <li key={t} className="flex gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="space-y-4 text-primary-foreground/85">
-            {[
-              'No more "send me my photos" messages for three weeks after the wedding.',
-              'No more Google Drive links that expire, get forwarded, or leak the whole album.',
-              'No more manually sorting family sets for each side of the wedding.',
-              'Every guest who scans your QR sees your studio name. That is 500 people who now know who shot the wedding.',
-            ].map((t) => (
-              <li key={t} className="flex gap-3">
-                <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-0.5" />
-                <span>{t}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="grid grid-cols-2 gap-3">
+            <img src={IMG.walima} alt="Muslim wedding reception" className="w-full h-64 object-cover rounded-2xl" />
+            <img src={IMG.mandapam} alt="Hindu bride at the mandapam" className="w-full h-64 object-cover rounded-2xl mt-8" />
+            <img src={IMG.familyDance} alt="Family dancing at the wedding" className="w-full h-48 object-cover rounded-2xl" />
+            <img src={IMG.garland} alt="Garland exchange" className="w-full h-48 object-cover rounded-2xl mt-8" />
+          </div>
         </div>
       </section>
 

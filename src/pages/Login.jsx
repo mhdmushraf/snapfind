@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Mail, Lock, ArrowRight, Loader2, ScanFace, QrCode, MessageCircle } from 'lucide-react';
 import Logo, { LogoMark } from '@/components/Logo';
-import { IMG } from '@/lib/images';
+import PhotoCycle from '@/components/PhotoCycle';
+import { IMG, GALLERY, FACES } from '@/lib/images';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -26,8 +27,8 @@ export default function Login() {
     <div className="min-h-screen grid lg:grid-cols-[1.1fr_1fr] bg-background">
       {/* Visual panel */}
       <div className="relative hidden lg:block overflow-hidden bg-primary">
-        <img src={IMG.hero} alt="" className="absolute inset-0 w-full h-full object-cover ken-burns" />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/30 to-transparent" />
+        <PhotoCycle seconds={30} />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/45 to-primary/25" />
 
         {/* floating result card */}
         <div className="absolute top-14 right-10 w-72 rounded-2xl bg-background/95 backdrop-blur shadow-2xl p-4 animate-[float_6s_ease-in-out_infinite]">
@@ -39,7 +40,7 @@ export default function Login() {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-1.5 mt-3">
-            {[IMG.garland, IMG.groomRites, IMG.muhurtam, IMG.jewelry].map((s, i) => (
+            {FACES.slice(0, 4).map((s, i) => (
               <img key={i} src={s} alt="" className="aspect-square object-cover rounded-md" />
             ))}
           </div>

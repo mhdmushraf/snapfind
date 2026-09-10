@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { User, Mail, Lock, ArrowRight, Loader2, Building2, MapPin, CheckCircle2 } from 'lucide-react';
 import Logo from '@/components/Logo';
-import { IMG, GALLERY } from '@/lib/images';
+import { IMG, GALLERY, FACES } from '@/lib/images';
 
 const makePrefix = () => 'studio_' + Math.random().toString(36).slice(2, 8);
 
@@ -120,32 +120,45 @@ export default function Register() {
         </div>
       </div>
 
-      {/* Visual panel — photo with live face-scan overlay */}
+      {/* Visual panel */}
       <div className="relative hidden lg:block overflow-hidden bg-primary order-1 lg:order-2">
-        <img src={GALLERY[0].src} alt="" className="absolute inset-0 w-full h-full object-cover ken-burns" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-primary/10" />
+        <img src={IMG.familyDance} alt="" className="absolute inset-0 w-full h-full object-cover ken-burns" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-primary/20" />
 
-        {/* face-detect boxes */}
-        {[[22, 30, 9], [41, 26, 8], [58, 34, 10], [74, 29, 8]].map(([x, y, s], i) => (
-          <div key={i} className="absolute border-2 border-accent rounded-md" style={{ left: `${x}%`, top: `${y}%`, width: `${s}%`, aspectRatio: '1', animation: `float ${5 + i}s ease-in-out infinite`, animationDelay: `${-i * 1.3}s` }}>
-            <span className="absolute -top-5 left-0 text-[10px] font-semibold text-accent bg-background/90 px-1.5 rounded">{['Anjali', 'Rahul', 'Amma', 'Guest 47'][i]}</span>
-          </div>
-        ))}
-        <div className="absolute inset-0"><div className="scan-line" /></div>
-
-        {/* result strip */}
-        <div className="absolute bottom-40 left-10 right-10 rounded-2xl bg-background/90 backdrop-blur p-4 shadow-2xl" style={{ animation: 'float 6s ease-in-out infinite' }}>
+        {/* Indexing card — boxes are drawn on tiles we control, so they always align */}
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[22rem] rounded-2xl bg-background/95 backdrop-blur p-5 shadow-2xl" style={{ animation: 'float 6s ease-in-out infinite' }}>
           <div className="flex items-center justify-between">
-            <div className="text-sm font-semibold">4 faces indexed · 63 matches for Guest 47</div>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent text-accent-foreground font-semibold">1.6 s</span>
+            <div className="text-sm font-semibold">Indexing faces…</div>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-semibold">6,412 photos</span>
           </div>
-          <div className="mt-3 grid grid-cols-6 gap-1.5">
-            {[1, 3, 4, 5, 2, 0].map((n) => <img key={n} src={GALLERY[n].src} alt="" className="aspect-square object-cover rounded-md" />)}
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {FACES.slice(0, 6).map((src, i) => (
+              <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
+                <img src={src} alt="" className="w-full h-full object-cover" />
+                <div className="absolute inset-[22%] border-2 border-accent rounded" />
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 h-1.5 rounded-full bg-secondary overflow-hidden">
+            <div className="h-full bg-accent rounded-full" style={{ width: '78%' }} />
+          </div>
+          <div className="mt-2 flex justify-between text-[11px] text-muted-foreground">
+            <span>4,998 of 6,412</span>
+            <span>~7 min left</span>
+          </div>
+        </div>
+
+        {/* Result chip */}
+        <div className="absolute bottom-52 left-10 flex items-center gap-3 rounded-2xl bg-background/95 backdrop-blur shadow-xl px-4 py-3" style={{ animation: 'float 7s ease-in-out infinite 1.5s' }}>
+          <div className="w-9 h-9 rounded-full bg-accent/15 flex items-center justify-center"><CheckCircle2 className="w-5 h-5 text-accent" /></div>
+          <div>
+            <div className="text-sm font-semibold">63 photos for Guest 47</div>
+            <div className="text-[11px] text-muted-foreground">Matched in 1.6 seconds</div>
           </div>
         </div>
 
         <div className="absolute top-10 right-10"><Logo inverted /></div>
-        <div className="absolute bottom-0 left-0 right-0 p-10 text-primary-foreground">
+        <div className="absolute bottom-0 left-0 right-0 p-10 text-primary-foreground bg-gradient-to-t from-primary to-transparent">
           <p className="font-heading text-3xl font-semibold max-w-md leading-snug">Upload once. Every guest finds their own photos.</p>
           <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-primary-foreground/85">
             {['No app for guests', 'Your studio on every gallery', 'Selfies deleted in 24 h'].map((t) => (

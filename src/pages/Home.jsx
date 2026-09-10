@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Upload, QrCode, ScanFace, MessageCircle, Shield, Zap, Palette, Download, Clock, Users, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Upload, QrCode, ScanFace, MessageCircle, Shield, Zap, Palette, Download, Clock, Users, CheckCircle2, Bell, Heart, Printer, Film, Scissors } from 'lucide-react';
 import { LogoMark } from '@/components/Logo';
 
 /* ---------- Phone mockup: guest flow, pure CSS/SVG, no external images ---------- */
@@ -64,11 +64,14 @@ export const STEPS = [
 
 const FEATURES = [
   { icon: Zap, title: 'Same-day delivery', body: 'Index 10,000 photos in under an hour. Guests find themselves before they leave the venue.' },
-  { icon: Palette, title: 'Your brand, not ours', body: 'Your logo, your colours, your watermark on every preview. Guests remember the studio, not the software.' },
-  { icon: MessageCircle, title: 'WhatsApp built in', body: 'Guests can get their gallery link on WhatsApp. Every share is a referral for your studio.' },
-  { icon: Shield, title: 'DPDP-ready consent', body: 'Explicit guest consent before every selfie. Selfies deleted in 24 hours. Face data deleted when the event expires.' },
-  { icon: Users, title: 'Multi-studio accounts', body: 'Add second shooters and editors. Each event belongs to one studio, always.' },
-  { icon: Clock, title: 'Live upload during the event', body: 'Point Snapfind at your Lightroom export folder and photos go live as you edit them.' },
+  { icon: Scissors, title: 'Smart culling', body: 'Blinks, blur and burst duplicates flagged automatically. Skip 6 hours of deleting.' },
+  { icon: Bell, title: 'Missing-guest alert', body: 'See who searched and found nothing. Know who you missed before they tell you. Only on Snapfind.' },
+  { icon: Heart, title: 'Couple album, auto-built', body: 'Every frame with both bride and groom, ranked by quality. The shortlist before you open Lightroom.' },
+  { icon: Printer, title: 'Earn from every gallery', body: 'Guests order prints and full-res downloads. You keep 70% without lifting a finger.' },
+  { icon: Film, title: 'Same-night reel', body: 'Top 30 frames, music, vertical export. On Instagram before the sadya is cleared.' },
+  { icon: MessageCircle, title: 'WhatsApp built in', body: 'Guests get their gallery link on WhatsApp. Every share is a referral for your studio.' },
+  { icon: Palette, title: 'Your brand, not ours', body: 'Your logo, colours and watermark on every preview. Guests remember the studio, not the software.' },
+  { icon: Shield, title: 'DPDP-ready consent', body: 'Explicit consent before every selfie. Selfies deleted in 24 hours. Face data deleted on expiry.' },
 ];
 
 const FAQS = [
@@ -169,7 +172,7 @@ export default function Home() {
       {/* Features */}
       <section className="max-w-7xl mx-auto px-5 sm:px-8 py-20 sm:py-28">
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Features</span>
-        <h2 className="font-heading text-3xl sm:text-5xl font-bold mt-3 max-w-2xl text-balance">Built for the way Indian weddings actually run.</h2>
+        <h2 className="font-heading text-3xl sm:text-5xl font-bold mt-3 max-w-2xl text-balance">The only delivery tool that also culls, sorts, and pays you back.</h2>
         <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {FEATURES.map((f) => (
             <div key={f.title} className="rounded-2xl border border-border p-6 hover:border-primary/40 transition">

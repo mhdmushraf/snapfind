@@ -1,55 +1,101 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Upload, ScanFace, QrCode, MessageCircle, Palette, Shield, Zap, Users, Download, Clock, Globe, BarChart3, Lock } from 'lucide-react';
+import { IMG, GALLERY } from '@/lib/images';
+import { FAQ, FAQS } from '@/pages/Pricing';
 
-const SERVICES = [
-  { icon: '💍', title: 'Weddings & Elopements', desc: 'Unobtrusive, documentary-style coverage that honors the day as it unfolds — from first look to last dance.', price: 'from $2,400', img: 'https://images.unsplash.com/photo-1601933973783-43cf8a7d4c5f?auto=format&fit=crop&w=900&q=80' },
-  { icon: '👤', title: 'Portraits', desc: 'Editorial and lifestyle portraits with natural light and honest expression, in studio or on location.', price: 'from $450', img: 'https://images.unsplash.com/photo-1487412720507-e7ab377c3c7d?auto=format&fit=crop&w=900&q=80' },
-  { icon: '👗', title: 'Fashion & Editorial', desc: 'Bold, magazine-grade direction for lookbooks, campaigns and designer collections.', price: 'from $1,200', img: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=80' },
-  { icon: '📦', title: 'Commercial & Product', desc: 'Clean, conversion-driven imagery for brands — e-commerce, lifestyle and advertising.', price: 'from $900', img: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=900&q=80' },
-  { icon: '🎨', title: 'Fine Art', desc: 'Limited-edition prints and gallery commissions — landscape, abstract and conceptual work.', price: 'from $350', img: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80' },
-  { icon: '🎬', title: 'Brand Story & Film', desc: 'Cinematic stills and short-form motion that give your brand a coherent visual voice.', price: 'from $1,800', img: 'https://images.unsplash.com/photo-1469474968028-5669f0772741?auto=format&fit=crop&w=900&q=80' },
+const GROUPS = [
+  {
+    title: 'Upload',
+    blurb: 'Get 10,000 photos from your laptop to the cloud without babysitting it.',
+    image: IMG.baraat,
+    items: [
+      [Upload, 'Drag the whole folder', 'JPEG, PNG, HEIC, WebP up to 50 MB each. Thousands at a time.'],
+      [Zap, 'Resumable uploads', 'Venue Wi-Fi drops? Upload picks up where it stopped. Nothing restarts.'],
+      [Clock, 'Live upload during the event', 'Point Snapfind at your Lightroom export folder. Photos go live as you edit.'],
+    ],
+  },
+  {
+    title: 'Find',
+    blurb: 'Open-source face recognition, tuned on Indian weddings.',
+    image: IMG.muhurtam,
+    items: [
+      [ScanFace, 'Selfie search', 'A guest takes one selfie and gets every photo they appear in. Under two seconds.'],
+      [BarChart3, 'Strict matching', 'Threshold tuned so cousins do not get each other\u2019s photos. Full gallery is one tap away.'],
+      [Users, 'Group results', 'Parents can search for their kids. Couples can see photos of both of them together.'],
+    ],
+  },
+  {
+    title: 'Share',
+    blurb: 'One QR code does the work of three weeks of WhatsApp forwarding.',
+    image: IMG.hero,
+    items: [
+      [QrCode, 'Printable QR + link', 'Put it on table cards, the LED wall, or the thank-you note. No app, no login.'],
+      [MessageCircle, 'WhatsApp delivery', 'Guests get their gallery link on WhatsApp. Every share is a referral for your studio.'],
+      [Download, 'Downloads you control', 'Watermarked previews by default. Full-resolution on when you say so.'],
+    ],
+  },
+  {
+    title: 'Brand & trust',
+    blurb: 'Guests remember the studio. Data never leaks.',
+    image: IMG.jewelry,
+    items: [
+      [Palette, 'Your logo everywhere', 'Studio name, logo, colours and watermark on every gallery and message.'],
+      [Globe, 'Custom domain', 'gallery.yourstudio.com on the Studio plan.'],
+      [Shield, 'DPDP-ready consent', 'Explicit consent before every selfie. Selfies deleted in 24 h. Face data deleted on expiry.'],
+      [Lock, 'Password + expiry', 'Optional event password. Galleries expire when you choose.'],
+    ],
+  },
 ];
 
-export default function Services() {
+export default function Features() {
   return (
     <div className="pt-16">
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 pt-20 pb-12">
-        <span className="text-xs uppercase tracking-[0.25em] text-accent">What we do</span>
-        <h1 className="font-heading text-5xl sm:text-6xl font-light mt-4 max-w-3xl text-balance">
-          Photography services for every story worth telling.
-        </h1>
-        <p className="mt-6 max-w-2xl text-muted-foreground leading-relaxed">
-          From intimate elopements to global campaigns, our collective covers the full spectrum of professional photography — each specialty led by photographers who live and breathe their craft.
-        </p>
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-16">
+        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Features</span>
+        <h1 className="font-heading text-4xl sm:text-6xl font-extrabold mt-3 max-w-3xl text-balance">Everything between the last shutter click and a happy guest.</h1>
+        <p className="mt-5 max-w-xl text-muted-foreground">Built for wedding and event photographers in India. Nothing you don\u2019t need, nothing you have to explain to a guest.</p>
       </section>
 
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 pb-12 grid md:grid-cols-2 gap-6">
-        {SERVICES.map((s) => (
-          <div key={s.title} className="group rounded-3xl overflow-hidden border border-border bg-card">
-            <div className="relative h-56 overflow-hidden">
-              <img src={s.img} alt={s.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              <span className="absolute top-4 right-4 bg-background/90 backdrop-blur px-3 py-1.5 rounded-full text-xs font-medium">{s.price}</span>
-            </div>
-            <div className="p-7">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{s.icon}</span>
-                <h3 className="font-heading text-2xl">{s.title}</h3>
-              </div>
-              <p className="mt-3 text-muted-foreground leading-relaxed">{s.desc}</p>
-              <Link to="/contact" className="inline-flex items-center gap-2 mt-5 text-sm font-medium text-accent hover:gap-3 transition-all">
-                Book this service <ArrowRight className="w-4 h-4" />
-              </Link>
+      {GROUPS.map((g, i) => (
+        <section key={g.title} className={`${i % 2 ? 'bg-secondary/40 border-y border-border' : ''}`}>
+          <div className={`max-w-7xl mx-auto px-5 sm:px-8 py-20 grid lg:grid-cols-2 gap-12 items-center ${i % 2 ? 'lg:[&>*:first-child]:order-2' : ''}`}>
+            <img src={g.image} alt="" className="w-full h-80 lg:h-[420px] object-cover rounded-3xl" />
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{g.title}</span>
+              <h2 className="font-heading text-3xl sm:text-4xl font-bold mt-3">{g.blurb}</h2>
+              <ul className="mt-8 space-y-6">
+                {g.items.map(([Icon, t, b]) => (
+                  <li key={t} className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0"><Icon className="w-5 h-5 text-primary" /></div>
+                    <div>
+                      <div className="font-semibold">{t}</div>
+                      <div className="text-sm text-muted-foreground mt-1">{b}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
-        ))}
+        </section>
+      ))}
+
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {GALLERY.map((g) => (
+            <img key={g.src} src={g.src} alt={g.alt} className="aspect-[4/3] w-full object-cover rounded-2xl" />
+          ))}
+        </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 py-16">
-        <div className="rounded-3xl bg-secondary p-10 sm:p-16">
-          <h2 className="font-heading text-3xl font-light max-w-xl">Not sure which fits your project?</h2>
-          <p className="mt-4 text-muted-foreground max-w-lg">Tell us what you're envisioning and we'll recommend the right photographer and package — no obligation.</p>
-          <Link to="/contact" className="inline-flex items-center gap-2 mt-7 px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium hover:opacity-90 transition">
-            Get a recommendation <ArrowRight className="w-4 h-4" />
+      <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-24">
+        <FAQ items={FAQS.slice(0, 8)} />
+      </section>
+
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 pb-24">
+        <div className="rounded-3xl bg-primary text-primary-foreground p-10 sm:p-16 text-center">
+          <h2 className="font-heading text-3xl sm:text-5xl font-bold">Try it on your next wedding, free.</h2>
+          <Link to="/register" className="mt-8 inline-flex items-center gap-2 px-7 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:opacity-90 transition">
+            Start free <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

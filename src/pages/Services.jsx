@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Upload, ScanFace, QrCode, MessageCircle, Palette, Shield, Zap, Users, Download, Clock, Globe, BarChart3, Lock } from 'lucide-react';
+import { ArrowRight, Upload, ScanFace, QrCode, MessageCircle, Palette, Shield, Zap, Users, Download, Clock, Globe, BarChart3, Lock, Heart, Bell, Film, Printer, IndianRupee, CheckSquare, Layers, Tv, Eye } from 'lucide-react';
 import { IMG, GALLERY } from '@/lib/images';
 import { FAQ, FAQS } from '@/pages/Pricing';
 
@@ -42,6 +42,39 @@ const GROUPS = [
       [QrCode, 'Printable QR + link', 'Put it on table cards, the LED wall, or the thank-you note. No app, no login.'],
       [MessageCircle, 'WhatsApp delivery', 'Guests get their gallery link on WhatsApp. Every share is a referral for your studio.'],
       [Download, 'Downloads you control', 'Watermarked previews by default. Full-resolution on when you say so.'],
+      [Tv, 'Live venue screen', 'Guest photos rotate on the LED wall while the reception is still on. The whole hall watches your work.'],
+    ],
+  },
+  {
+    title: 'Deliver smarter',
+    blurb: 'Once we know who is in every frame, the boring sorting does itself.',
+    image: IMG.keralaBoys,
+    items: [
+      [Heart, 'Couple album, auto-built', 'Every frame with both bride and groom, ranked by quality. The album shortlist before you open Lightroom.'],
+      [Layers, 'Family sets', 'Bride\u2019s side and groom\u2019s side grouped automatically from who appears with whom.'],
+      [Bell, 'Missing-guest alert', 'See who searched and found nothing. Know which guests you missed before they tell you. No one else offers this.'],
+      [CheckSquare, 'Client approval', 'The couple picks album photos from the gallery. You get the shortlist, not 40 screenshots.'],
+    ],
+  },
+  {
+    title: 'Earn',
+    blurb: 'Guests pay for what they love. You keep most of it.',
+    image: IMG.jewelry,
+    items: [
+      [Printer, 'Print orders from the gallery', 'A guest sees their 40 photos and orders a frame or album. You earn on every order without touching it.'],
+      [IndianRupee, 'Full-res download upsell', 'Free watermarked previews, paid full-resolution downloads. Split 70/30 in your favour.'],
+      [Film, 'Same-night reel', 'Top 30 frames by quality score, music, vertical export. Post it on Instagram before the sadya is cleared.'],
+      [Users, 'Next-wedding leads', 'Guests who searched are the next couples getting married. A \u201cbook this studio\u201d button on every gallery.'],
+    ],
+  },
+  {
+    title: 'Run the studio',
+    blurb: 'Everything from haldi to reception in one place.',
+    image: IMG.entrance,
+    items: [
+      [Layers, 'Multi-event packages', 'Haldi, sangeet, wedding, reception \u2014 one project, one QR, separate galleries.'],
+      [Eye, 'Delivery tracker', 'Who has seen their photos, who downloaded, who hasn\u2019t opened. Nudge them on WhatsApp in one tap.'],
+      [Users, 'Team seats', 'Second shooters upload, editors cull, you approve. Everyone sees the same event list.'],
     ],
   },
   {
@@ -62,8 +95,8 @@ export default function Features() {
     <div className="pt-16">
       <section className="max-w-7xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-16">
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Features</span>
-        <h1 className="font-heading text-4xl sm:text-6xl font-extrabold mt-3 max-w-3xl text-balance">Everything between the last shutter click and a happy guest.</h1>
-        <p className="mt-5 max-w-xl text-muted-foreground">Built for wedding and event photographers in India. Nothing you don\u2019t need, nothing you have to explain to a guest.</p>
+        <h1 className="font-heading text-4xl sm:text-6xl font-extrabold mt-3 max-w-3xl text-balance">Everything between the last shutter click and a paid, happy guest.</h1>
+        <p className="mt-5 max-w-xl text-muted-foreground">Find, cull, deliver, and earn \u2014 built for wedding and event photographers in India. Once Snapfind knows who is in every frame, the rest of the work does itself.</p>
       </section>
 
       {GROUPS.map((g, i) => (

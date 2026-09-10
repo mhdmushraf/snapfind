@@ -20,7 +20,7 @@ const GROUPS = [
     image: IMG.muhurtam,
     items: [
       [ScanFace, 'Selfie search', 'A guest takes one selfie and gets every photo they appear in. Under two seconds.'],
-      [BarChart3, 'Strict matching', 'Threshold tuned so cousins do not get each other\u2019s photos. Full gallery is one tap away.'],
+      [BarChart3, 'Strict matching', 'Threshold tuned so cousins do not get each other’s photos. Full gallery is one tap away.'],
       [Users, 'Group results', 'Parents can search for their kids. Couples can see photos of both of them together.'],
     ],
   },
@@ -48,10 +48,10 @@ const GROUPS = [
   {
     title: 'Deliver smarter',
     blurb: 'Once we know who is in every frame, the boring sorting does itself.',
-    image: IMG.keralaBoys,
+    image: IMG.imamZamin,
     items: [
       [Heart, 'Couple album, auto-built', 'Every frame with both bride and groom, ranked by quality. The album shortlist before you open Lightroom.'],
-      [Layers, 'Family sets', 'Bride\u2019s side and groom\u2019s side grouped automatically from who appears with whom.'],
+      [Layers, 'Family sets', 'Bride’s side and groom’s side grouped automatically from who appears with whom.'],
       [Bell, 'Missing-guest alert', 'See who searched and found nothing. Know which guests you missed before they tell you. No one else offers this.'],
       [CheckSquare, 'Client approval', 'The couple picks album photos from the gallery. You get the shortlist, not 40 screenshots.'],
     ],
@@ -64,16 +64,16 @@ const GROUPS = [
       [Printer, 'Print orders from the gallery', 'A guest sees their 40 photos and orders a frame or album. You earn on every order without touching it.'],
       [IndianRupee, 'Full-res download upsell', 'Free watermarked previews, paid full-resolution downloads. Split 70/30 in your favour.'],
       [Film, 'Same-night reel', 'Top 30 frames by quality score, music, vertical export. Post it on Instagram before the sadya is cleared.'],
-      [Users, 'Next-wedding leads', 'Guests who searched are the next couples getting married. A \u201cbook this studio\u201d button on every gallery.'],
+      [Users, 'Next-wedding leads', 'Guests who searched are the next couples getting married. A “book this studio” button on every gallery.'],
     ],
   },
   {
     title: 'Run the studio',
-    blurb: 'Everything from haldi to reception in one place.',
-    image: IMG.entrance,
+    blurb: 'Every function, every community, in one place.',
+    image: IMG.walima,
     items: [
-      [Layers, 'Multi-event packages', 'Haldi, sangeet, wedding, reception \u2014 one project, one QR, separate galleries.'],
-      [Eye, 'Delivery tracker', 'Who has seen their photos, who downloaded, who hasn\u2019t opened. Nudge them on WhatsApp in one tap.'],
+      [Layers, 'Multi-event packages', 'Nikah, walima, haldi, sangeet, reception — one project, one QR, separate galleries.'],
+      [Eye, 'Delivery tracker', 'Who has seen their photos, who downloaded, who hasn’t opened. Nudge them on WhatsApp in one tap.'],
       [Users, 'Team seats', 'Second shooters upload, editors cull, you approve. Everyone sees the same event list.'],
     ],
   },
@@ -93,10 +93,25 @@ const GROUPS = [
 export default function Features() {
   return (
     <div className="pt-16">
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-16">
-        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Features</span>
-        <h1 className="font-heading text-4xl sm:text-6xl font-extrabold mt-3 max-w-3xl text-balance">Everything between the last shutter click and a paid, happy guest.</h1>
-        <p className="mt-5 max-w-xl text-muted-foreground">Find, cull, deliver, and earn \u2014 built for wedding and event photographers in India. Once Snapfind knows who is in every frame, the rest of the work does itself.</p>
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-16 grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Features</span>
+          <h1 className="font-heading text-4xl sm:text-6xl font-extrabold mt-3 text-balance">Everything between the last shutter click and a paid, happy guest.</h1>
+          <p className="mt-5 max-w-xl text-muted-foreground">Find, cull, deliver and earn — built for wedding and event photographers across India. Nikah or muhurtam, Malabar or Madurai: once Snapfind knows who is in every frame, the rest of the work does itself.</p>
+          <Link to="/register" className="mt-8 inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-accent text-accent-foreground font-semibold hover:opacity-90 transition">
+            Start free <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-3">
+            <img src={IMG.nikah} alt="Nikah ceremony" className="w-full h-56 object-cover rounded-2xl" />
+            <img src={IMG.keralaBoys} alt="Kerala wedding party" className="w-full h-40 object-cover rounded-2xl" />
+          </div>
+          <div className="space-y-3 pt-8">
+            <img src={IMG.hero} alt="Hindu bride at the mandapam" className="w-full h-40 object-cover rounded-2xl" />
+            <img src={IMG.familyDance} alt="Family dancing at a wedding" className="w-full h-56 object-cover rounded-2xl" />
+          </div>
+        </div>
       </section>
 
       {GROUPS.map((g, i) => (

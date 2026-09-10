@@ -3,6 +3,67 @@ import { ArrowRight, Upload, ScanFace, QrCode, MessageCircle, Palette, Shield, Z
 import { IMG, GALLERY } from '@/lib/images';
 import { FAQ, FAQS } from '@/pages/Pricing';
 
+/* ---------- Purpose-built visuals for the two software-concept sections ---------- */
+
+function CullVisual() {
+  const frames = [
+    { keep: true,  label: '92' },
+    { keep: false, label: 'blink' },
+    { keep: false, label: 'dup' },
+    { keep: false, label: 'blur' },
+    { keep: true,  label: '88' },
+    { keep: false, label: 'dup' },
+    { keep: true,  label: '95' },
+    { keep: false, label: 'dup' },
+    { keep: false, label: 'blink' },
+  ];
+  return (
+    <div className="rounded-3xl bg-card border border-border p-6 h-80 lg:h-[420px] flex flex-col justify-center">
+      <div className="flex items-center justify-between mb-5">
+        <span className="text-sm font-semibold">Burst group · 9 frames</span>
+        <span className="text-xs px-2.5 py-1 rounded-full bg-accent/10 text-accent font-semibold">3 kept</span>
+      </div>
+      <div className="grid grid-cols-3 gap-3">
+        {frames.map((f, i) => (
+          <div key={i} className={`relative aspect-square rounded-xl border-2 flex items-center justify-center text-xs font-semibold transition ${f.keep ? 'border-accent bg-accent/5 text-accent' : 'border-dashed border-border bg-muted/40 text-muted-foreground opacity-60'}`}>
+            {f.keep ? <span>{f.label}</span> : <span className="line-through">{f.label}</span>}
+            {f.keep && <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-accent text-accent-foreground text-[10px] flex items-center justify-center">✓</span>}
+          </div>
+        ))}
+      </div>
+      <p className="mt-5 text-xs text-muted-foreground">Quality score out of 100. Nothing is deleted — low scores are just hidden until you say otherwise.</p>
+    </div>
+  );
+}
+
+function SortVisual() {
+  const rows = [
+    { name: "Bride's side", n: 1240, w: '78%' },
+    { name: "Groom's side", n: 1105, w: '70%' },
+    { name: 'Couple together', n: 386, w: '32%' },
+    { name: 'Not yet found', n: 12, w: '8%', warn: true },
+  ];
+  return (
+    <div className="rounded-3xl bg-card border border-border p-6 h-80 lg:h-[420px] flex flex-col justify-center">
+      <span className="text-sm font-semibold">Anjali &amp; Rahul · 6,412 photos</span>
+      <div className="mt-6 space-y-5">
+        {rows.map((r) => (
+          <div key={r.name}>
+            <div className="flex justify-between text-xs mb-1.5">
+              <span className={r.warn ? 'text-accent font-semibold' : 'font-medium'}>{r.name}</span>
+              <span className="text-muted-foreground">{r.n.toLocaleString('en-IN')}{r.warn ? ' guests' : ' photos'}</span>
+            </div>
+            <div className="h-2.5 rounded-full bg-muted overflow-hidden">
+              <div className={`h-full rounded-full ${r.warn ? 'bg-accent' : 'bg-primary'}`} style={{ width: r.w }} />
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-6 text-xs text-muted-foreground">12 guests searched and found nothing — the shots you missed, before anyone asks.</p>
+    </div>
+  );
+}
+
 const GROUPS = [
   {
     title: 'Upload',
@@ -27,7 +88,7 @@ const GROUPS = [
   {
     title: 'Cull',
     blurb: 'Skip the 6 hours of deleting blinks and duplicates.',
-    image: IMG.crowning,
+    visual: CullVisual,
     items: [
       [Zap, 'Burst de-duplication', 'Groups near-identical frames and picks the sharpest. You review one, not nine.'],
       [ScanFace, 'Closed eyes + blur flags', 'Every frame gets a quality score. Hide the bottom 20% with one toggle before guests ever see it.'],
@@ -48,7 +109,7 @@ const GROUPS = [
   {
     title: 'Deliver smarter',
     blurb: 'Once we know who is in every frame, the boring sorting does itself.',
-    image: IMG.walima,
+    visual: SortVisual,
     items: [
       [Heart, 'Couple album, auto-built', 'Every frame with both bride and groom, ranked by quality. The album shortlist before you open Lightroom.'],
       [Layers, 'Family sets', 'Bride’s side and groom’s side grouped automatically from who appears with whom.'],
@@ -70,7 +131,7 @@ const GROUPS = [
   {
     title: 'Run the studio',
     blurb: 'Every function, every community, in one place.',
-    image: IMG.crowning,
+    image: IMG.walima,
     items: [
       [Layers, 'Multi-event packages', 'Nikah, walima, haldi, sangeet, reception — one project, one QR, separate galleries.'],
       [Eye, 'Delivery tracker', 'Who has seen their photos, who downloaded, who hasn’t opened. Nudge them on WhatsApp in one tap.'],
@@ -117,7 +178,7 @@ export default function Features() {
       {GROUPS.map((g, i) => (
         <section key={g.title} className={`${i % 2 ? 'bg-secondary/40 border-y border-border' : ''}`}>
           <div className={`max-w-7xl mx-auto px-5 sm:px-8 py-20 grid lg:grid-cols-2 gap-12 items-center ${i % 2 ? 'lg:[&>*:first-child]:order-2' : ''}`}>
-            <img src={g.image} alt="" className="w-full h-80 lg:h-[420px] object-cover rounded-3xl" />
+            {g.visual ? <g.visual /> : <img src={g.image} alt="" className="w-full h-80 lg:h-[420px] object-cover rounded-3xl" />}
             <div>
               <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">{g.title}</span>
               <h2 className="font-heading text-3xl sm:text-4xl font-bold mt-3">{g.blurb}</h2>

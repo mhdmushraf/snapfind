@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Instagram, Youtube, Mail, MessageCircle } from 'lucide-react';
 import Logo from '@/components/Logo';
+import { IMAGE_CREDIT } from '@/lib/images';
 
 export default function Footer() {
   return (
@@ -14,7 +15,7 @@ export default function Footer() {
           <div className="flex gap-4 mt-6">
             <a href="https://instagram.com/snapfind.in" target="_blank" rel="noreferrer" aria-label="Instagram" className="hover:text-accent transition-colors"><Instagram className="w-5 h-5" /></a>
             <a href="https://youtube.com/@snapfind" target="_blank" rel="noreferrer" aria-label="YouTube" className="hover:text-accent transition-colors"><Youtube className="w-5 h-5" /></a>
-            <a href="https://wa.me/919999999999" target="_blank" rel="noreferrer" aria-label="WhatsApp" className="hover:text-accent transition-colors"><MessageCircle className="w-5 h-5" /></a>
+            <a href="https://wa.me/971556140067" target="_blank" rel="noreferrer" aria-label="WhatsApp" className="hover:text-accent transition-colors"><MessageCircle className="w-5 h-5" /></a>
             <a href="mailto:hello@snapfind.in" aria-label="Email" className="hover:text-accent transition-colors"><Mail className="w-5 h-5" /></a>
           </div>
         </div>
@@ -50,8 +51,8 @@ export default function Footer() {
       </div>
       <div className="border-t border-primary-foreground/10">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-6 flex flex-col sm:flex-row justify-between gap-2 text-xs text-primary-foreground/50">
-          <span>© {new Date().getFullYear()} Snapfind. Made in Kerala, India.</span>
-          <span>Selfies are deleted within 24 hours. We never sell face data.</span>
+          <span>© {new Date().getFullYear()} Snapfind · Linkzone Global FZCO, Dubai · Made in Kerala, India.</span>
+          <span>Selfies are deleted within 24 hours. We never sell face data. {IMAGE_CREDIT}</span>
         </div>
       </div>
     </footer>

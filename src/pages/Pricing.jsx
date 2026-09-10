@@ -43,7 +43,7 @@ export const FAQS = [
   ['What file types and sizes can I upload?', 'JPEG, PNG, HEIC and WebP up to 50 MB each. RAW files are not supported \u2014 export from Lightroom first. Uploads are resumable, so a dropped connection picks up where it left off.'],
   ['Is my studio branding on the gallery?', 'Yes. Your logo, colours and studio name appear on every guest gallery and every WhatsApp message. Guests remember your studio, not Snapfind.'],
   ['What is the WhatsApp feature?', 'A guest can optionally enter their phone number and receive their gallery link on WhatsApp. It also lets you send a \u201cyour photos are ready\u201d message to everyone who searched.'],
-  ['How do photo credits work?', 'One credit is used per photo uploaded. Free plan includes 5,000 credits. Pay per event is billed at \u20b90.08 per photo when you finish uploading an event. Studio plan includes 40,000 photos a month.'],
+  ['How do photo credits work?', 'One credit is used per photo uploaded. Free includes 5,000. Per event covers 8,000 photos for ₹499, then ₹0.06 per extra photo. Pro includes 100,000 photos a year, Studio 500,000.'],
   ['Can I delete an event early?', 'Yes, any time from the dashboard. Photos, previews and face data are removed within 24 hours of deletion.'],
   ['Do you support multiple photographers or editors in one studio?', 'Studio plan supports 5 team members with a shared events list. Free and Pay per event are single-user.'],
   ['Where is the data stored?', 'Photos and galleries are stored on encrypted object storage with a global CDN. Face vectors are stored separately from photos and are deleted on event expiry.'],

@@ -1,0 +1,62 @@
+{
+  "name": "Photographer",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Photographer's full name"
+    },
+    "specialty": {
+      "type": "string",
+      "enum": [
+        "Weddings",
+        "Portraits",
+        "Fashion",
+        "Commercial",
+        "Fine Art",
+        "Editorial"
+      ],
+      "default": "Portraits"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Short biography"
+    },
+    "location": {
+      "type": "string",
+      "description": "City / region"
+    },
+    "profile_image": {
+      "type": "string",
+      "format": "uri",
+      "description": "Profile photo URL"
+    },
+    "portfolio_image": {
+      "type": "string",
+      "format": "uri",
+      "description": "Featured portfolio image URL"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 5,
+      "default": 5
+    },
+    "starting_price": {
+      "type": "number",
+      "description": "Starting session price in USD"
+    },
+    "years_experience": {
+      "type": "number",
+      "default": 0
+    },
+    "available": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "specialty"
+  ]
+}

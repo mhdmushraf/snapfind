@@ -82,7 +82,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <img src={IMG.keralaBoys} alt="Kerala wedding party" className="mt-10 w-full h-64 object-cover rounded-2xl" />
+          <img src={IMG.garland} alt="South Indian wedding" className="mt-10 w-full h-64 object-cover rounded-2xl" />
         </div>
 
         <div className="rounded-3xl border border-border p-6 sm:p-8 h-fit">

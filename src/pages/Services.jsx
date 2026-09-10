@@ -7,7 +7,7 @@ const GROUPS = [
   {
     title: 'Upload',
     blurb: 'Get 10,000 photos from your laptop to the cloud without babysitting it.',
-    image: IMG.baraat,
+    image: IMG.garland,
     items: [
       [Upload, 'Drag the whole folder', 'JPEG, PNG, HEIC, WebP up to 50 MB each. Thousands at a time.'],
       [Zap, 'Resumable uploads', 'Venue Wi-Fi drops? Upload picks up where it stopped. Nothing restarts.'],

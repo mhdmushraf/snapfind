@@ -105,7 +105,7 @@ export default function Home() {
           </div>
           <div className="relative">
             <PhoneMock />
-            <img src={IMG.nikah} alt="Nikah ceremony" className="hidden xl:block absolute -left-16 top-8 w-40 h-52 object-cover rounded-2xl shadow-2xl -rotate-6" />
+            <img src={IMG.walima} alt="Muslim wedding reception" className="hidden xl:block absolute -left-16 top-8 w-40 h-52 object-cover rounded-2xl shadow-2xl -rotate-6" />
             <img src={IMG.crowning} alt="Kerala Christian wedding" className="hidden xl:block absolute -right-12 bottom-16 w-36 h-44 object-cover rounded-2xl shadow-2xl rotate-6" />
           </div>
         </div>

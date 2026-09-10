@@ -141,7 +141,7 @@ const GROUPS = [
   {
     title: 'Brand & trust',
     blurb: 'Guests remember the studio. Data never leaks.',
-    image: IMG.jewelry,
+    image: IMG.crowning,
     items: [
       [Palette, 'Your logo everywhere', 'Studio name, logo, colours and watermark on every gallery and message.'],
       [Globe, 'Custom domain', 'gallery.yourstudio.com on the Studio plan.'],

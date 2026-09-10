@@ -16,9 +16,9 @@ const wm = (file, w = 1600) =>
 
 export const IMG = {
   // Muslim
-  nikah:       wm('An Islamic wedding for a new Bride and groom.jpg'),
-  walima:      wm('Ishtiaq and Mashqura Reception (14791734476).jpg'),
-  mehndi:      wm('Band, known as Imam Zamin.jpg'),
+  walima:      wm('Ishtiaq and Mashqura Reception (14791734476).jpg'),   // faces
+  nikah:       wm('An Islamic wedding for a new Bride and groom.jpg'),   // NO faces (torso crop)
+  mehndi:      wm('Band, known as Imam Zamin.jpg'),                      // NO faces (hands)
   // Kerala Christian (Syro-Malabar Nasrani)
   crowning:    wm('Crowning in Syro-Malabar Nasrani Wedding by Mar Gregory Karotemprel.jpg'),
   // Hindu
@@ -29,16 +29,24 @@ export const IMG = {
   baraat:      wm('Dancing in Baarat.jpg'),
 };
 
+/**
+ * Photos with clearly visible faces. Use these anywhere the design implies
+ * face detection, or as a large hero. NEVER use IMG.nikah or IMG.mehndi there
+ * — they are detail crops with no faces, which looks absurd on a face-search
+ * product.
+ */
+export const FACES = [IMG.familyDance, IMG.baraat, IMG.walima, IMG.garland, IMG.mandapam, IMG.jaymal];
+
 /** Ordered so adjacent frames are from different traditions. */
 export const GALLERY = [
-  { src: IMG.nikah,       alt: 'Bride and groom at a Nikah ceremony' },
+  { src: IMG.familyDance, alt: "The groom's family dancing at the wedding" },
   { src: IMG.crowning,    alt: 'Crowning at a Kerala Syro-Malabar Christian wedding' },
   { src: IMG.mandapam,    alt: 'Hindu bride being led to the mandapam' },
-  { src: IMG.walima,      alt: 'Guests at a Muslim wedding reception' },
+  { src: IMG.walima,      alt: 'Bride and groom at a Muslim wedding reception' },
   { src: IMG.garland,     alt: 'Garland exchange at a South Indian wedding' },
-  { src: IMG.familyDance, alt: "The groom's family dancing at the wedding" },
+  { src: IMG.baraat,      alt: 'Guests dancing in the baraat procession' },
   { src: IMG.jaymal,      alt: 'Newly married couple at the jaymal ceremony' },
-  { src: IMG.mehndi,      alt: 'Bride and groom during a Muslim wedding ritual' },
+  { src: IMG.nikah,       alt: 'Bride and groom at a Nikah ceremony' },
 ];
 
 /**

@@ -6,28 +6,37 @@ const PLANS = [
   {
     name: 'Free',
     price: '₹0',
-    unit: '5,000 photo credits',
-    tagline: 'Try it on your next wedding.',
-    features: ['1 studio, 1 user', 'Face search + QR galleries', 'Watermarked previews', 'WhatsApp gallery link', 'Galleries live 30 days'],
+    unit: '5,000 photos to try it',
+    tagline: 'Your next wedding is the trial.',
+    features: ['1 studio, 1 user', 'Face search + QR gallery', 'Watermarked previews', 'WhatsApp gallery link', 'Gallery live 30 days'],
     cta: 'Start free',
     to: '/register',
   },
   {
-    name: 'Pay per event',
-    price: '₹0.08',
-    unit: 'per photo · no monthly fee',
-    tagline: 'A 6,000-photo wedding costs about ₹480.',
-    features: ['Everything in Free', 'Unlimited events', 'Your logo + watermark', 'Full-resolution downloads', 'Galleries live 12 months', 'Email + WhatsApp support'],
-    cta: 'Start free, upgrade later',
+    name: 'Per event',
+    price: '₹499',
+    unit: 'per wedding · up to 8,000 photos',
+    tagline: 'Half the market rate. Pay only when you shoot.',
+    features: ['Everything in Free', '₹0.06 per photo above 8,000', 'Your logo + watermark', 'Full-resolution downloads', 'Gallery live 12 months', 'WhatsApp support'],
+    cta: 'Start free, pay per event',
     to: '/register',
     popular: true,
   },
   {
+    name: 'Pro',
+    price: '₹6,499',
+    unit: 'per year · 100,000 photos',
+    tagline: 'About 15 weddings a year. ₹0.065 a photo.',
+    features: ['Everything in Per event', '2 team members', 'Priority indexing', 'Custom gallery domain', 'Email + WhatsApp support'],
+    cta: 'Go Pro',
+    to: '/register',
+  },
+  {
     name: 'Studio',
-    price: '₹2,499',
-    unit: 'per month · 40,000 photos',
-    tagline: 'For studios shooting 4+ weddings a month.',
-    features: ['Everything in Pay per event', '5 team members', 'Live upload during the event', 'Custom domain for galleries', 'Priority indexing', 'Priority WhatsApp support'],
+    price: '₹24,999',
+    unit: 'per year · 500,000 photos',
+    tagline: 'For studios shooting 60+ weddings a year.',
+    features: ['Everything in Pro', '5 team members', 'Live upload during the event', 'Bulk WhatsApp delivery', 'Priority support, 1-hour response'],
     cta: 'Talk to us',
     to: '/contact',
   },
@@ -75,11 +84,11 @@ export default function Pricing() {
     <div className="pt-16">
       <section className="max-w-7xl mx-auto px-5 sm:px-8 pt-16 sm:pt-24 pb-10 text-center">
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Pricing</span>
-        <h1 className="font-heading text-4xl sm:text-6xl font-extrabold mt-3 text-balance">Pay per photo. Nothing per month.</h1>
-        <p className="mt-5 max-w-xl mx-auto text-muted-foreground">Start free with 5,000 photos. After that, pay only for the weddings you shoot. A typical Kerala wedding costs less than a single print.</p>
+        <h1 className="font-heading text-4xl sm:text-6xl font-extrabold mt-3 text-balance">Priced below the market. On purpose.</h1>
+        <p className="mt-5 max-w-xl mx-auto text-muted-foreground">Start free with 5,000 photos. Then ₹499 per wedding — half what most platforms charge — or a yearly plan if you shoot a lot.</p>
       </section>
 
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 pb-24 grid md:grid-cols-3 gap-6">
+      <section className="max-w-7xl mx-auto px-5 sm:px-8 pb-16 grid md:grid-cols-2 xl:grid-cols-4 gap-6">
         {PLANS.map((p) => (
           <div key={p.name} className={`relative rounded-3xl border p-8 flex flex-col ${p.popular ? 'border-accent shadow-xl shadow-accent/10' : 'border-border'}`}>
             {p.popular && <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-accent text-accent-foreground text-xs font-semibold">Most popular</span>}
@@ -99,6 +108,38 @@ export default function Pricing() {
             </Link>
           </div>
         ))}
+      </section>
+
+      <section className="max-w-4xl mx-auto px-5 sm:px-8 pb-24">
+        <h2 className="font-heading text-2xl sm:text-3xl font-bold text-center">How we compare</h2>
+        <p className="mt-2 text-sm text-muted-foreground text-center">Public list prices as shown on each platform's website, September 2026.</p>
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-secondary/60 text-left">
+              <tr>
+                <th className="px-5 py-3 font-semibold">Platform</th>
+                <th className="px-5 py-3 font-semibold">Pricing</th>
+                <th className="px-5 py-3 font-semibold">Per photo</th>
+                <th className="px-5 py-3 font-semibold">Trial</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {[
+                ['Snapfind', '₹499 / event or ₹6,499 / yr', '₹0.06–0.065', 'Free 5,000 photos'],
+                ['Kwikpic', '₹7,490 / yr (100k photos)', '₹0.075', 'Free trial'],
+                ['mAlbum', '₹0.10 / photo', '₹0.10', 'No monthly fee'],
+                ['MyPhotoStudio', '₹1,000 / event', 'unlimited', 'Per-event only'],
+              ].map(([n, p, pp, t], i) => (
+                <tr key={n} className={i === 0 ? 'bg-accent/5 font-medium' : ''}>
+                  <td className="px-5 py-3">{n}</td>
+                  <td className="px-5 py-3">{p}</td>
+                  <td className="px-5 py-3">{pp}</td>
+                  <td className="px-5 py-3">{t}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="max-w-3xl mx-auto px-5 sm:px-8 pb-24">

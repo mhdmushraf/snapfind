@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Aperture, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
+import Logo, { LogoMark } from '@/components/Logo';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -29,20 +30,17 @@ export default function Login() {
         <img src="https://images.unsplash.com/photo-1452587925148-ce54479d2037?auto=format&fit=crop&w=1200&q=80" alt="Photographer at work" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20" />
         <div className="absolute bottom-0 p-12 text-white">
-          <Aperture className="w-8 h-8 text-accent mb-4" strokeWidth={1.5} />
-          <p className="font-heading text-3xl font-light max-w-sm leading-snug">Welcome back to the collective.</p>
+          <LogoMark size={40} className="mb-4" />
+          <p className="font-heading text-3xl font-semibold max-w-sm leading-snug">Welcome back. Your guests are waiting.</p>
         </div>
       </div>
 
       <div className="flex items-center justify-center p-6 sm:p-12 bg-background">
         <div className="w-full max-w-sm">
-          <Link to="/" className="flex items-center gap-2 mb-10 md:hidden">
-            <Aperture className="w-6 h-6 text-accent" strokeWidth={1.5} />
-            <span className="font-heading text-xl font-semibold">Lumière</span>
-          </Link>
+          <Logo className="mb-10 md:hidden" />
 
-          <h1 className="font-heading text-3xl font-light">Sign in</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Access your photographer portal.</p>
+          <h1 className="font-heading text-3xl font-bold">Sign in</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Access your Snapfind studio dashboard.</p>
 
           <form onSubmit={submit} className="mt-8 space-y-4">
             <label className="block">

@@ -31,8 +31,8 @@
 
 export const STORAGE = {
   provider: 'cloudinary',
-  cloudName: '',      // ← paste your Cloudinary cloud name
-  uploadPreset: '',   // ← paste your unsigned upload preset name
+  cloudName: 'ves1ve5j',
+  uploadPreset: '',   // ← paste your unsigned upload preset name here
 };
 
 export const storageReady = () =>

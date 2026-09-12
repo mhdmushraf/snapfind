@@ -358,6 +358,151 @@ export default function EventDetail() {
           )
         )}
 
+        {tab === 'review' && (
+          unindexed > 0 ? (
+            <div className="rounded-3xl bg-background border border-dashed border-border p-12 text-center">
+              <ScanFace className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
+              <h2 className="font-heading text-xl font-bold">Index the photos first</h2>
+              <p className="mt-2 text-sm text-muted-foreground max-w-sm mx-auto">
+                Culling suggestions come from the same pass that finds faces. Run indexing and they'll appear here.
+              </p>
+            </div>
+          ) : suggested.length === 0 ? (
+            <div className="rounded-3xl bg-background border border-dashed border-border p-12 text-center">
+              <Check className="w-10 h-10 text-accent mx-auto mb-4" />
+              <h2 className="font-heading text-xl font-bold">Nothing to cull</h2>
+              <p className="mt-2 text-sm text-muted-foreground max-w-sm mx-auto">
+                No blurred frames, closed eyes or burst duplicates found.
+                {culledCount > 0 && ` ${culledCount} photo${culledCount > 1 ? 's are' : ' is'} currently hidden.`}
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <p className="text-sm text-muted-foreground">
+                  {suggested.length} frame{suggested.length > 1 ? 's' : ''} we'd skip. Nothing is deleted —
+                  hiding just keeps them out of the guest gallery.
+                </p>
+                <button
+                  onClick={async () => {
+                    await Promise.all(suggested.map((p) => base44.entities.Photo.update(p.id, { culled: true }).catch(() => {})));
+                    load();
+                  }}
+                  className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition"
+                >
+                  <EyeOff className="w-4 h-4" /> Hide all {suggested.length}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                {suggested.map((p) => {
+                  const reasons = [];
+                  if (p.duplicate_of) reasons.push('duplicate');
+                  if (p.eyes_closed) reasons.push('eyes closed');
+                  if ((p.quality_score ?? 100) < CULL_BELOW) reasons.push('soft focus');
+                  return (
+                    <div key={p.id} className="rounded-2xl bg-background border border-border overflow-hidden">
+                      <div className="aspect-square bg-muted">
+                        <img src={thumbUrl(p.r2_key, 500)} alt="" loading="lazy" className="w-full h-full object-cover" />
+                      </div>
+                      <div className="p-3">
+                        <div className="flex flex-wrap gap-1">
+                          {reasons.map((r) => (
+                            <span key={r} className="text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent font-medium">{r}</span>
+                          ))}
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
+                            {p.quality_score ?? '–'}/100
+                          </span>
+                        </div>
+                        <button
+                          onClick={async () => {
+                            await base44.entities.Photo.update(p.id, { culled: true });
+                            load();
+                          }}
+                          className="mt-3 w-full py-2 rounded-full border border-border text-xs font-medium hover:border-foreground/40 transition"
+                        >
+                          Hide from gallery
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {culledCount > 0 && (
+                <div className="mt-8 pt-6 border-t border-border">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-muted-foreground">{culledCount} photo{culledCount > 1 ? 's' : ''} hidden</p>
+                    <button
+                      onClick={async () => {
+                        await Promise.all(photos.filter((p) => p.culled).map((p) => base44.entities.Photo.update(p.id, { culled: false }).catch(() => {})));
+                        load();
+                      }}
+                      className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:underline"
+                    >
+                      <Eye className="w-4 h-4" /> Restore all
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )
+        )}
+
+        {tab === 'guests' && (
+          sessions.length === 0 ? (
+            <div className="rounded-3xl bg-background border border-dashed border-border p-12 text-center">
+              <Users className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
+              <h2 className="font-heading text-xl font-bold">No guest searches yet</h2>
+              <p className="mt-2 text-sm text-muted-foreground max-w-sm mx-auto">
+                Once guests scan the QR and take a selfie, you'll see every search here — including
+                anyone who found nothing.
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                {[
+                  ['Searches', sessions.length],
+                  ['Found photos', sessions.length - missed.length],
+                  ['Found nothing', missed.length],
+                ].map(([label, value], i) => (
+                  <div key={label} className={`rounded-2xl border p-5 ${i === 2 && missed.length > 0 ? 'bg-accent/5 border-accent/30' : 'bg-background border-border'}`}>
+                    <div className={`font-heading text-2xl font-bold ${i === 2 && missed.length > 0 ? 'text-accent' : ''}`}>{value}</div>
+                    <div className="text-xs text-muted-foreground uppercase tracking-wider mt-0.5">{label}</div>
+                  </div>
+                ))}
+              </div>
+
+              {missed.length > 0 && (
+                <div className="rounded-2xl bg-accent/5 border border-accent/30 p-5 mb-6 flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                  <div className="text-sm">
+                    <p className="font-semibold">{missed.length} guest{missed.length > 1 ? 's' : ''} searched and found nothing</p>
+                    <p className="mt-1 text-muted-foreground">
+                      Either you missed them, or their selfie was too dark to match. Worth a look before
+                      anyone asks you for their photos.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="rounded-2xl bg-background border border-border overflow-hidden">
+                {sessions.map((s, i) => (
+                  <div key={s.id} className={`flex items-center justify-between px-5 py-3.5 text-sm ${i ? 'border-t border-border' : ''}`}>
+                    <span className="text-muted-foreground">
+                      {new Date(s.created_date).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' })}
+                    </span>
+                    <span className={s.match_count === 0 ? 'text-accent font-medium' : 'font-medium'}>
+                      {s.match_count === 0 ? 'No match' : `${s.match_count} photo${s.match_count > 1 ? 's' : ''}`}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )
+        )}
+
         {tab === 'selects' && (
           selects.length === 0 ? (
             <div className="rounded-3xl bg-background border border-dashed border-border p-12 text-center">

@@ -1,6 +1,18 @@
 import { Link } from 'react-router-dom';
 import { Clock, ArrowRight } from 'lucide-react';
-import { GALLERY } from '@/lib/images';
+import { GALLERY, IMG } from '@/lib/images';
+
+/** Blog leads with the QR-table shot so it doesn't echo Home's hero photo. */
+const BLOG_IMAGES = [
+  { src: IMG.qrTable,      alt: 'Guests finding their photos by scanning a QR code' },
+  { src: IMG.photographer, alt: 'Wedding photographer at work' },
+  { src: IMG.oppana,       alt: 'Oppana at a Kerala Muslim wedding' },
+  { src: IMG.haldi,        alt: 'Haldi ceremony in a Kerala courtyard' },
+  { src: IMG.church,       alt: 'Crowning at a Kerala Christian wedding' },
+  { src: IMG.sadya,        alt: 'Wedding sadya on banana leaves' },
+  { src: IMG.thali,        alt: 'Tying the thali at a Kerala Hindu wedding' },
+  { src: IMG.cakeCutting,  alt: 'Cake cutting at a Kerala wedding reception' },
+];
 
 const POSTS = [
   {
@@ -70,7 +82,7 @@ export default function Blog() {
       {/* Featured */}
       <section className="max-w-7xl mx-auto px-5 sm:px-8 pb-16">
         <div className="grid lg:grid-cols-2 gap-8 items-center rounded-3xl border border-border overflow-hidden">
-          <img src={GALLERY[0].src} alt={GALLERY[0].alt} className="w-full h-72 lg:h-96 object-cover" />
+          <img src={BLOG_IMAGES[0].src} alt={BLOG_IMAGES[0].alt} className="w-full h-72 lg:h-96 object-cover" />
           <div className="p-8 lg:pr-12">
             <div className="flex items-center gap-3 text-xs">
               <span className="text-accent font-semibold uppercase tracking-wider">{featured.cat}</span>
@@ -86,7 +98,7 @@ export default function Blog() {
       {/* Grid */}
       <section className="max-w-7xl mx-auto px-5 sm:px-8 pb-24 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {rest.map((p, i) => {
-          const img = GALLERY[(i + 1) % GALLERY.length];
+          const img = BLOG_IMAGES[(i + 1) % BLOG_IMAGES.length];
           return (
             <article key={p.title} className="rounded-2xl border border-border overflow-hidden hover:border-primary/40 transition group">
               <img src={img.src} alt={img.alt} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />

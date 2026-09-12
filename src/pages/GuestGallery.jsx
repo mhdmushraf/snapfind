@@ -6,6 +6,7 @@ import {
   MessageCircle, ArrowLeft, X,
 } from 'lucide-react';
 import { LogoMark } from '@/components/Logo';
+import SelfieCapture from '@/components/SelfieCapture';
 import { thumbUrl, previewUrl } from '@/lib/storage';
 
 /** Stable anonymous id per browser, so a guest can unstar their own picks. */
@@ -36,6 +37,8 @@ export default function GuestGallery() {
   const [unlocked, setUnlocked] = useState(false);
   const [pwInput, setPwInput] = useState('');
   const [pwError, setPwError] = useState(false);
+  const [camera, setCamera] = useState(false);
+  const [searched, setSearched] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -81,6 +84,21 @@ export default function GuestGallery() {
         setFavs((f) => { const n = { ...f }; delete n[photo.id]; return n; });
       }
     }
+  };
+
+  const onSelfie = async () => {
+    setCamera(false);
+    try {
+      await base44.entities.GuestSession.create({
+        event_id: event.id,
+        consent_given: true,
+        consent_timestamp: new Date().toISOString(),
+        matched_photo_ids: [],
+        match_count: 0,
+        error: 'face_search_not_enabled',
+      });
+    } catch { /* non-blocking */ }
+    setSearched(true);
   };
 
   if (loading) {
@@ -242,13 +260,25 @@ export default function GuestGallery() {
 
             <button
               disabled={!consent}
+              onClick={() => setCamera(true)}
               className="mt-5 w-full py-3.5 rounded-full bg-accent text-accent-foreground font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Open camera
             </button>
-            <p className="mt-3 text-[11px] text-muted-foreground">
-              Face search goes live once your photographer finishes setup.
-            </p>
+            {searched && (
+              <div className="mt-4 rounded-xl bg-secondary/60 p-4 text-left">
+                <p className="text-sm font-medium">Selfie received</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Face matching isn't switched on for this gallery yet. Browse all the photos below —
+                  your photographer will enable matching soon.
+                </p>
+              </div>
+            )}
+            {!searched && (
+              <p className="mt-3 text-[11px] text-muted-foreground">
+                Your selfie is used once and deleted within 24 hours.
+              </p>
+            )}
           </div>
 
           {event.allow_full_gallery && photos.length > 0 && (
@@ -279,6 +309,8 @@ export default function GuestGallery() {
           We never sell or share it.
         </span>
       </div>
+
+      {camera && <SelfieCapture onCapture={onSelfie} onClose={() => setCamera(false)} />}
     </Shell>
   );
 }

@@ -15,8 +15,10 @@ export default function GuestGallery() {
   const { slug } = useParams();
   const [event, setEvent] = useState(null);
   const [studio, setStudio] = useState(null);
+  const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [consent, setConsent] = useState(false);
+  const [browsing, setBrowsing] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -27,6 +29,10 @@ export default function GuestGallery() {
         if (e?.studio_id) {
           const s = await base44.entities.Studio.filter({ id: e.studio_id });
           setStudio(s?.[0] || null);
+        }
+        if (e?.id) {
+          const p = await base44.entities.Photo.filter({ event_id: e.id }, 'sort_order', 120);
+          setPhotos(p || []);
         }
       } catch {
         setEvent(null);
@@ -55,9 +61,26 @@ export default function GuestGallery() {
     );
   }
 
-  const notReady = event.status === 'draft' || event.status === 'uploading';
+  const notReady = event.status === 'draft' || (event.status === 'uploading' && photos.length === 0);
   const indexing = event.status === 'processing';
   const expired = event.status === 'expired';
+
+  if (browsing) {
+    return (
+      <Shell studio={studio} wide>
+        <button onClick={() => setBrowsing(false)} className="text-sm text-accent font-medium hover:underline">← Back</button>
+        <h1 className="font-heading text-2xl font-bold mt-3">{event.name}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{photos.length} photos</p>
+        <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {photos.map((p) => (
+            <a key={p.id} href={p.r2_key} target="_blank" rel="noreferrer" className="aspect-square rounded-xl overflow-hidden bg-muted block">
+              <img src={p.r2_key} alt="" loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            </a>
+          ))}
+        </div>
+      </Shell>
+    );
+  }
 
   return (
     <Shell studio={studio}>
@@ -115,9 +138,12 @@ export default function GuestGallery() {
             </p>
           </div>
 
-          {event.allow_full_gallery && (
-            <button className="mt-4 w-full py-3 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition">
-              Or browse all {(event.photo_count || 0).toLocaleString('en-IN')} photos
+          {event.allow_full_gallery && photos.length > 0 && (
+            <button
+              onClick={() => setBrowsing(true)}
+              className="mt-4 w-full py-3 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"
+            >
+              Or browse all {(event.photo_count || photos.length).toLocaleString('en-IN')} photos
             </button>
           )}
         </div>
@@ -134,11 +160,11 @@ export default function GuestGallery() {
   );
 }
 
-function Shell({ studio, children }) {
+function Shell({ studio, children, wide }) {
   return (
     <div className="min-h-screen bg-secondary/30 flex flex-col">
-      <div className="flex-1 flex items-center justify-center px-5 py-10">
-        <div className="w-full max-w-md">
+      <div className={`flex-1 px-5 py-10 ${wide ? '' : 'flex items-center justify-center'}`}>
+        <div className={`w-full mx-auto ${wide ? 'max-w-3xl' : 'max-w-md'}`}>
           <div className="flex items-center gap-2.5 mb-6">
             {studio?.logo_url
               ? <img src={studio.logo_url} alt="" className="h-9 w-auto" />

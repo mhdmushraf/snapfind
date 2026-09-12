@@ -11,7 +11,6 @@
       "type": "string"
     },
     "error": {
-      "description": "e.g. no_face_detected",
       "type": "string"
     },
     "event_id": {
@@ -31,7 +30,6 @@
       "type": "array"
     },
     "phone": {
-      "description": "Optional, for WhatsApp delivery",
       "type": "string"
     }
   },
@@ -40,16 +38,13 @@
     "consent_given"
   ],
   "rls": {
+    "create": {},
     "delete": {
       "user_condition": {
         "role": "admin"
       }
     },
-    "read": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
+    "read": {},
     "update": {
       "user_condition": {
         "role": "admin"

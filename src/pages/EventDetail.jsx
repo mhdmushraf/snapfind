@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import {
   ArrowLeft, Upload, Loader2, Images, QrCode as QrIcon, Settings2, Trash2,
   Check, Copy, ExternalLink, AlertTriangle, X, Heart, Download, ScanFace,
-  Scissors, Users, Eye, EyeOff, IndianRupee, Link2,
+  Scissors, Users, Eye, EyeOff, IndianRupee, Link2, MessageCircle,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
@@ -580,12 +580,26 @@ export default function EventDetail() {
                 <ExternalLink className="w-4 h-4" /> Preview as a guest
               </a>
               <a
-                href={`https://wa.me/?text=${encodeURIComponent(`Photos from ${event.name} are ready. Find yours here: ${url}`)}`}
+                href={`https://wa.me/?text=${encodeURIComponent(
+                  `${studio?.name ? studio.name + ' — ' : ''}photos from ${event.name} are ready.\n\nFind yours: ${url}\n\nScan or open the link, take a selfie, and you'll see only the photos you're in.`
+                )}`}
                 target="_blank" rel="noreferrer"
                 className="mt-3 w-full inline-flex items-center justify-center gap-2 py-3 rounded-full bg-[#25D366] text-white font-semibold hover:opacity-90 transition"
               >
-                Share on WhatsApp
+                <MessageCircle className="w-4 h-4" /> Send on WhatsApp
               </a>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Opens WhatsApp with the message ready — pick the family group and send. Works on phone and desktop.
+              </p>
+
+              {sessions.length > 0 && (
+                <div className="mt-5 pt-5 border-t border-border">
+                  <p className="text-sm font-medium">{sessions.length} guest{sessions.length > 1 ? 's have' : ' has'} searched</p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Share the link again in the family group to reach the rest.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -597,8 +611,7 @@ export default function EventDetail() {
               ['allow_download', 'Allow full-resolution downloads', 'Off means watermarked previews only.'],
               ['watermark_previews', 'Watermark previews', 'Your studio watermark on every preview image.'],
             ].map(([key, label, help]) => (
-              <label key={key} className="flex items-start gap-3 rounded-2xl bg-background border border-border p-5 cursor-pointer">
-                <input
+              <label key={key} className="flex items-start gap-3 rounded-2xl bg-background border border-border p-5 cursor-pointer">                <input
                   type="checkbox"
                   checked={!!event[key]}
                   onChange={(e) => patch({ [key]: e.target.checked })}

@@ -156,6 +156,7 @@ export default function EventDetail() {
   }
 
   const url = guestUrl(event.qr_slug);
+  const unindexed = photos.filter((p) => !p.indexed).length;
 
   return (
     <div className="min-h-screen bg-secondary/25">
@@ -180,11 +181,20 @@ export default function EventDetail() {
           <div className="flex gap-2">
             <button
               onClick={() => fileInput.current?.click()}
-              disabled={!!progress}
+              disabled={!!progress || !!indexing}
               className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-accent text-accent-foreground font-semibold hover:opacity-90 transition disabled:opacity-60"
             >
               <Upload className="w-4 h-4" /> Upload photos
             </button>
+            {unindexed > 0 && (
+              <button
+                onClick={runIndexing}
+                disabled={!!progress || !!indexing}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:opacity-90 transition disabled:opacity-60"
+              >
+                <ScanFace className="w-4 h-4" /> Index {unindexed} face{unindexed > 1 ? 's' : ''}
+              </button>
+            )}
             <input ref={fileInput} type="file" multiple accept={ACCEPTED} onChange={onPick} className="hidden" />
           </div>
         </div>
@@ -201,6 +211,38 @@ export default function EventDetail() {
                 Full instructions are in that file.
               </p>
             </div>
+          </div>
+        )}
+
+        {indexing && (
+          <div className="mb-6 rounded-2xl bg-background border border-border p-5">
+            <div className="flex justify-between text-sm font-medium">
+              <span className="inline-flex items-center gap-2"><ScanFace className="w-4 h-4 text-accent" /> Finding faces…</span>
+              <span>{indexing.done} of {indexing.total}</span>
+            </div>
+            <div className="mt-3 h-2 rounded-full bg-muted overflow-hidden">
+              <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${(indexing.done / indexing.total) * 100}%` }} />
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {indexing.faces} faces found so far. This runs in your browser — keep this tab open and
+              on screen. Roughly 1–3 photos a second.
+            </p>
+          </div>
+        )}
+
+        {indexError && (
+          <div className="mb-6 rounded-2xl bg-destructive/5 border border-destructive/20 p-4 text-sm">
+            {indexError}
+          </div>
+        )}
+
+        {!indexing && unindexed === 0 && photos.length > 0 && (
+          <div className="mb-6 rounded-2xl bg-primary/5 border border-primary/20 p-4 flex items-center gap-3 text-sm">
+            <ScanFace className="w-4 h-4 text-primary shrink-0" />
+            <span>
+              All {photos.length} photos indexed · {photos.reduce((n, p) => n + (p.face_count || 0), 0)} faces found.
+              Guests can now find themselves by selfie.
+            </span>
           </div>
         )}
 

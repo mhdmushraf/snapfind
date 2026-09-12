@@ -82,7 +82,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <img src={IMG.garland} alt="South Indian wedding" className="mt-10 w-full h-64 object-cover rounded-2xl" />
+          <img src={IMG.qrTable} alt="Guests finding their photos at a wedding reception" className="mt-10 w-full h-64 object-cover rounded-2xl" />
         </div>
 
         <div className="rounded-3xl border border-border p-6 sm:p-8 h-fit">

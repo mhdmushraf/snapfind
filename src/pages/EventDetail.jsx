@@ -609,9 +609,11 @@ export default function EventDetail() {
             {[
               ['allow_full_gallery', 'Let guests browse all photos', 'Otherwise they only see their own matches.'],
               ['allow_download', 'Allow full-resolution downloads', 'Off means watermarked previews only.'],
+              ['allow_orders', 'Allow guest orders', 'Guests can order prints and paid downloads from their gallery.'],
               ['watermark_previews', 'Watermark previews', 'Your studio watermark on every preview image.'],
             ].map(([key, label, help]) => (
-              <label key={key} className="flex items-start gap-3 rounded-2xl bg-background border border-border p-5 cursor-pointer">                <input
+              <label key={key} className="flex items-start gap-3 rounded-2xl bg-background border border-border p-5 cursor-pointer">
+                <input
                   type="checkbox"
                   checked={!!event[key]}
                   onChange={(e) => patch({ [key]: e.target.checked })}

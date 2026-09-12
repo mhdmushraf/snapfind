@@ -8,6 +8,7 @@ import {
 import { LogoMark } from '@/components/Logo';
 import SelfieCapture from '@/components/SelfieCapture';
 import { thumbUrl, previewUrl } from '@/lib/storage';
+import { describeOne, matchPhotos } from '@/lib/faces';
 
 /** Stable anonymous id per browser, so a guest can unstar their own picks. */
 function deviceId() {
@@ -38,7 +39,9 @@ export default function GuestGallery() {
   const [pwInput, setPwInput] = useState('');
   const [pwError, setPwError] = useState(false);
   const [camera, setCamera] = useState(false);
-  const [searched, setSearched] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const [results, setResults] = useState(null);   // null = not searched, [] = no match
+  const [searchError, setSearchError] = useState('');
 
   const load = useCallback(async () => {
     try {
@@ -86,19 +89,37 @@ export default function GuestGallery() {
     }
   };
 
-  const onSelfie = async () => {
+  const onSelfie = async ({ url }) => {
     setCamera(false);
+    setSearching(true);
+    setSearchError('');
     try {
-      await base44.entities.GuestSession.create({
+      const descriptor = await describeOne(url);
+      if (!descriptor) {
+        setSearchError("We couldn't find a face in that photo. Try again in better light, facing the camera.");
+        setSearching(false);
+        return;
+      }
+      const indexed = photos.filter((p) => p.face_data);
+      if (!indexed.length) {
+        setSearchError('This gallery has not been indexed yet. Ask your photographer to run face indexing.');
+        setSearching(false);
+        return;
+      }
+      const matches = matchPhotos(descriptor, indexed);
+      setResults(matches);
+      base44.entities.GuestSession.create({
         event_id: event.id,
         consent_given: true,
         consent_timestamp: new Date().toISOString(),
-        matched_photo_ids: [],
-        match_count: 0,
-        error: 'face_search_not_enabled',
-      });
-    } catch { /* non-blocking */ }
-    setSearched(true);
+        matched_photo_ids: matches.map((m) => m.id),
+        match_count: matches.length,
+      }).catch(() => {});
+    } catch (err) {
+      setSearchError(err?.message || 'Something went wrong while searching. Try again.');
+    } finally {
+      setSearching(false);
+    }
   };
 
   if (loading) {

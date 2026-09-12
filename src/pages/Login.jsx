@@ -27,7 +27,7 @@ export default function Login() {
     <div className="min-h-screen grid lg:grid-cols-[1.1fr_1fr] bg-background">
       {/* Visual panel */}
       <div className="relative hidden lg:block overflow-hidden bg-primary">
-        <PhotoCycle seconds={30} />
+        <PhotoCycle images={[IMG.oppana, IMG.church, IMG.cakeCutting, IMG.groupPortrait]} seconds={26} />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/85 via-primary/45 to-primary/25" />
 
         {/* floating result card */}
@@ -40,7 +40,7 @@ export default function Login() {
             </div>
           </div>
           <div className="grid grid-cols-4 gap-1.5 mt-3">
-            {FACES.slice(0, 4).map((s, i) => (
+            {[IMG.cakeCutting, IMG.oppana, IMG.church, IMG.groupPortrait].map((s, i) => (
               <img key={i} src={s} alt="" className="aspect-square object-cover rounded-md" />
             ))}
           </div>

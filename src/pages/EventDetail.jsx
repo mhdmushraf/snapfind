@@ -7,7 +7,8 @@ import {
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
-import { uploadPhotos, validateFiles, ACCEPTED, MAX_FILE_MB } from '@/lib/upload';
+import { uploadPhotos, validateFiles, ACCEPTED, MAX_FILE_MB, StorageNotConfigured } from '@/lib/upload';
+import { storageReady, thumbUrl } from '@/lib/storage';
 
 const guestUrl = (s) => `${window.location.origin}/g/${s}`;
 
@@ -24,6 +25,7 @@ export default function EventDetail() {
   const [progress, setProgress] = useState(null);
   const [rejected, setRejected] = useState([]);
   const [copied, setCopied] = useState(false);
+  const [storageError, setStorageError] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -51,27 +53,33 @@ export default function EventDetail() {
     if (!ok.length) return;
 
     setProgress({ done: 0, total: ok.length, failed: 0 });
-    await base44.entities.Event.update(id, { status: 'uploading' });
+    try {
+      await base44.entities.Event.update(id, { status: 'uploading' });
 
-    const { uploaded } = await uploadPhotos({
-      files: ok,
-      eventId: id,
-      studioId: event.studio_id,
-      onProgress: setProgress,
-    });
-
-    const newCount = (event.photo_count || 0) + uploaded;
-    await base44.entities.Event.update(id, {
-      photo_count: newCount,
-      status: newCount > 0 ? 'live' : 'draft',
-    });
-    if (studio) {
-      await base44.entities.Studio.update(studio.id, {
-        photo_credits: Math.max(0, (studio.photo_credits || 0) - uploaded),
+      const { uploaded } = await uploadPhotos({
+        files: ok,
+        eventId: id,
+        studioId: event.studio_id,
+        onProgress: setProgress,
       });
+
+      const newCount = (event.photo_count || 0) + uploaded;
+      await base44.entities.Event.update(id, {
+        photo_count: newCount,
+        status: newCount > 0 ? 'live' : 'draft',
+      });
+      if (studio) {
+        await base44.entities.Studio.update(studio.id, {
+          photo_credits: Math.max(0, (studio.photo_credits || 0) - uploaded),
+        });
+      }
+    } catch (err) {
+      if (err instanceof StorageNotConfigured) setStorageError(true);
+      await base44.entities.Event.update(id, { status: event.photo_count > 0 ? 'live' : 'draft' });
+    } finally {
+      setProgress(null);
+      load();
     }
-    setProgress(null);
-    load();
   };
 
   const patch = async (fields) => {
@@ -131,6 +139,21 @@ export default function EventDetail() {
             <input ref={fileInput} type="file" multiple accept={ACCEPTED} onChange={onPick} className="hidden" />
           </div>
         </div>
+
+        {(!storageReady() || storageError) && (
+          <div className="mb-6 rounded-2xl bg-accent/5 border border-accent/30 p-5 flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-semibold">Photo storage isn't set up yet</p>
+              <p className="mt-1 text-muted-foreground">
+                Photos upload straight from the browser to Cloudinary, so they never touch your
+                Base44 credits. Create a free Cloudinary account, add an <em>unsigned</em> upload
+                preset, and paste the cloud name and preset into <code className="text-xs bg-muted px-1 py-0.5 rounded">src/lib/storage.js</code>.
+                Full instructions are in that file.
+              </p>
+            </div>
+          </div>
+        )}
 
         {progress && (
           <div className="mb-6 rounded-2xl bg-background border border-border p-5">
@@ -196,7 +219,7 @@ export default function EventDetail() {
               <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
                 {photos.map((p) => (
                   <div key={p.id} className="aspect-square rounded-xl overflow-hidden bg-muted">
-                    <img src={p.r2_key} alt={p.original_filename} loading="lazy" className="w-full h-full object-cover" />
+                    <img src={thumbUrl(p.r2_key, 400)} alt={p.original_filename} loading="lazy" className="w-full h-full object-cover" />
                   </div>
                 ))}
               </div>

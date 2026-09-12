@@ -2,25 +2,31 @@
   "name": "Photo",
   "properties": {
     "blur_score": {
-      "description": "0-100, higher = sharper",
+      "description": "0-100 sharpness, higher is sharper",
       "type": "number"
     },
     "culled": {
       "default": false,
+      "description": "Photographer hid this frame from the guest gallery",
       "type": "boolean"
     },
     "duplicate_of": {
+      "description": "Photo id of the best frame in this burst group",
       "type": "string"
     },
     "event_id": {
       "type": "string"
+    },
+    "eyes_closed": {
+      "default": false,
+      "type": "boolean"
     },
     "face_count": {
       "default": 0,
       "type": "number"
     },
     "face_data": {
-      "description": "JSON array of 128-number face descriptors, one per face found in this photo",
+      "description": "JSON array of 128-number face descriptors",
       "type": "string"
     },
     "file_size": {
@@ -29,9 +35,12 @@
     "height": {
       "type": "number"
     },
+    "image_hash": {
+      "description": "64-bit average hash for near-duplicate grouping",
+      "type": "string"
+    },
     "indexed": {
       "default": false,
-      "description": "True once face descriptors have been computed",
       "type": "boolean"
     },
     "original_filename": {
@@ -41,6 +50,7 @@
       "type": "string"
     },
     "quality_score": {
+      "description": "0-100 overall keep score",
       "type": "number"
     },
     "r2_key": {

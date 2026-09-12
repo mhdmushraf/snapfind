@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { ArrowLeft, Loader2, Upload, Check, Trash2, Building2, MapPin, Phone } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { STORAGE, storageReady, thumbUrl } from '@/lib/storage';
+import { ensureStudio } from '@/lib/studio';
 
 async function uploadLogo(file) {
   const form = new FormData();
@@ -31,9 +32,10 @@ export default function StudioSettings() {
   useEffect(() => {
     (async () => {
       try {
-        const me = await base44.auth.me();
-        const list = await base44.entities.Studio.filter({ created_by_id: me.id });
-        setStudio(list?.[0] || null);
+        const { studio: s } = await ensureStudio();
+        setStudio(s);
+      } catch {
+        setStudio(null);
       } finally {
         setLoading(false);
       }
@@ -67,8 +69,8 @@ export default function StudioSettings() {
   }
   if (!studio) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p className="text-muted-foreground">No studio found on this account.</p>
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center">
+        <p className="text-muted-foreground">Couldn't load your studio. Try signing out and back in.</p>
         <Link to="/dashboard" className="text-accent font-medium hover:underline">Back to dashboard</Link>
       </div>
     );

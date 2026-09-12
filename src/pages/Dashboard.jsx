@@ -12,6 +12,12 @@ import { guestUrl } from '@/lib/config';
 
 const slug = () => Math.random().toString(36).slice(2, 10);
 
+const FUNCTIONS = [
+  ['wedding', 'Wedding'], ['nikah', 'Nikah'], ['engagement', 'Engagement'],
+  ['haldi', 'Haldi'], ['mehndi', 'Mehndi'], ['reception', 'Reception'],
+  ['sangeet', 'Sangeet'], ['church', 'Church'], ['other', 'Other'],
+];
+
 const STATUS = {
   draft:      ['Draft', 'bg-muted text-muted-foreground'],
   uploading:  ['Uploading', 'bg-accent/15 text-accent'],
@@ -131,6 +137,7 @@ export default function Dashboard() {
       {showNew && (
         <NewEventModal
           studio={studio}
+          events={events}
           onClose={() => setShowNew(false)}
           onCreated={() => { setShowNew(false); load(); }}
         />
@@ -225,8 +232,8 @@ function EventCard({ event, onQr }) {
   );
 }
 
-function NewEventModal({ studio, onClose, onCreated }) {
-  const [form, setForm] = useState({ name: '', event_date: '', venue: '' });
+function NewEventModal({ studio, events, onClose, onCreated }) {
+  const [form, setForm] = useState({ name: '', event_date: '', venue: '', function_type: 'wedding', parent_event_id: '' });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -242,6 +249,8 @@ function NewEventModal({ studio, onClose, onCreated }) {
         name: form.name,
         event_date: form.event_date || null,
         venue: form.venue,
+        function_type: form.function_type,
+        parent_event_id: form.parent_event_id || '',
         qr_slug: slug(),
         status: 'draft',
         photo_count: 0,
@@ -289,6 +298,35 @@ function NewEventModal({ studio, onClose, onCreated }) {
             />
           </label>
         </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <label className="block">
+            <span className="text-xs uppercase tracking-wider text-muted-foreground">Function</span>
+            <select
+              value={form.function_type}
+              onChange={(e) => setForm({ ...form, function_type: e.target.value })}
+              className="input mt-2"
+            >
+              {FUNCTIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </select>
+          </label>
+          <label className="block">
+            <span className="text-xs uppercase tracking-wider text-muted-foreground">Part of</span>
+            <select
+              value={form.parent_event_id}
+              onChange={(e) => setForm({ ...form, parent_event_id: e.target.value })}
+              className="input mt-2"
+            >
+              <option value="">Standalone event</option>
+              {(events || []).filter((e) => !e.parent_event_id).map((e) => (
+                <option key={e.id} value={e.id}>{e.name}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <p className="text-xs text-muted-foreground -mt-1">
+          Link functions to one booking — haldi, nikah and reception under a single wedding.
+          Each keeps its own gallery and QR code.
+        </p>
         {error && <p className="text-sm text-destructive bg-destructive/10 px-4 py-3 rounded-xl">{error}</p>}
         <button
           type="submit" disabled={saving}

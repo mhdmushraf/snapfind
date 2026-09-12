@@ -9,8 +9,8 @@ import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
 import { uploadPhotos, validateFiles, ACCEPTED, MAX_FILE_MB, StorageNotConfigured } from '@/lib/upload';
 import { storageReady, thumbUrl } from '@/lib/storage';
-
-const guestUrl = (s) => `${window.location.origin}/g/${s}`;
+import { ensureStudio } from '@/lib/studio';
+import { guestUrl } from '@/lib/config';
 
 export default function EventDetail() {
   const { id } = useParams();

@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import {
   ArrowLeft, Upload, Loader2, Images, QrCode as QrIcon, Settings2, Trash2,
   Check, Copy, ExternalLink, AlertTriangle, X, Heart, Download, ScanFace,
+  Scissors, Users, Eye, EyeOff,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
@@ -179,6 +180,11 @@ export default function EventDetail() {
 
   const url = guestUrl(event.qr_slug);
   const unindexed = photos.filter((p) => !p.indexed).length;
+  const suggested = photos.filter(
+    (p) => !p.culled && p.indexed && ((p.quality_score ?? 100) < CULL_BELOW || p.eyes_closed || p.duplicate_of)
+  );
+  const culledCount = photos.filter((p) => p.culled).length;
+  const missed = sessions.filter((s) => s.match_count === 0);
 
   return (
     <div className="min-h-screen bg-secondary/25">
@@ -299,7 +305,14 @@ export default function EventDetail() {
 
         {/* Tabs */}
         <div className="flex gap-1 mb-6 border-b border-border">
-          {[['photos', 'Photos', Images], ['selects', `Selects${selects.length ? ` (${selects.length})` : ''}`, Heart], ['share', 'Share', QrIcon], ['settings', 'Settings', Settings2]].map(([k, label, Icon]) => (
+          {[
+            ['photos', 'Photos', Images],
+            ['review', `Review${suggested.length ? ` (${suggested.length})` : ''}`, Scissors],
+            ['selects', `Selects${selects.length ? ` (${selects.length})` : ''}`, Heart],
+            ['guests', `Guests${sessions.length ? ` (${sessions.length})` : ''}`, Users],
+            ['share', 'Share', QrIcon],
+            ['settings', 'Settings', Settings2],
+          ].map(([k, label, Icon]) => (
             <button
               key={k}
               onClick={() => setTab(k)}

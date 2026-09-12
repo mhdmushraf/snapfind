@@ -19,6 +19,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
 import EventDetail from '@/pages/EventDetail';
+import StudioSettings from '@/pages/StudioSettings';
 import GuestGallery from '@/pages/GuestGallery';
 // Add page imports here
 
@@ -67,6 +68,7 @@ const AuthenticatedApp = () => {
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/event/:id" element={<EventDetail />} />
+        <Route path="/studio-settings" element={<StudioSettings />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

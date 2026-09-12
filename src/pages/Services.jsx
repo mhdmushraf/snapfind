@@ -68,7 +68,7 @@ const GROUPS = [
   {
     title: 'Upload',
     blurb: 'Get 10,000 photos from your laptop to the cloud without babysitting it.',
-    image: IMG.baraat,
+    image: IMG.photographer,
     items: [
       [Upload, 'Drag the whole folder', 'JPEG, PNG, HEIC, WebP up to 50 MB each. Thousands at a time.'],
       [Zap, 'Resumable uploads', 'Venue Wi-Fi drops? Upload picks up where it stopped. Nothing restarts.'],
@@ -78,7 +78,7 @@ const GROUPS = [
   {
     title: 'Find',
     blurb: 'Open-source face recognition, tuned on Indian weddings.',
-    image: IMG.garland,
+    image: IMG.sadya,
     items: [
       [ScanFace, 'Selfie search', 'A guest takes one selfie and gets every photo they appear in. Under two seconds.'],
       [BarChart3, 'Strict matching', 'Threshold tuned so cousins do not get each other’s photos. Full gallery is one tap away.'],
@@ -98,7 +98,7 @@ const GROUPS = [
   {
     title: 'Share',
     blurb: 'One QR code does the work of three weeks of WhatsApp forwarding.',
-    image: IMG.jaymal,
+    image: IMG.qrTable,
     items: [
       [QrCode, 'Printable QR + link', 'Put it on table cards, the LED wall, or the thank-you note. No app, no login.'],
       [MessageCircle, 'WhatsApp delivery', 'Guests get their gallery link on WhatsApp. Every share is a referral for your studio.'],
@@ -131,7 +131,7 @@ const GROUPS = [
   {
     title: 'Run the studio',
     blurb: 'Every function, every community, in one place.',
-    image: IMG.walima,
+    image: IMG.oppana,
     items: [
       [Layers, 'Multi-event packages', 'Nikah, walima, haldi, sangeet, reception — one project, one QR, separate galleries.'],
       [Eye, 'Delivery tracker', 'Who has seen their photos, who downloaded, who hasn’t opened. Nudge them on WhatsApp in one tap.'],
@@ -141,7 +141,7 @@ const GROUPS = [
   {
     title: 'Brand & trust',
     blurb: 'Guests remember the studio. Data never leaks.',
-    image: IMG.crowning,
+    image: IMG.church,
     items: [
       [Palette, 'Your logo everywhere', 'Studio name, logo, colours and watermark on every gallery and message.'],
       [Globe, 'Custom domain', 'gallery.yourstudio.com on the Studio plan.'],
@@ -165,12 +165,12 @@ export default function Features() {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-3">
-            <img src={IMG.walima} alt="Muslim wedding reception" className="w-full h-56 object-cover rounded-2xl" />
-            <img src={IMG.crowning} alt="Kerala Christian wedding crowning" className="w-full h-40 object-cover rounded-2xl" />
+            <img src={IMG.groupPortrait} alt="Kerala wedding reception" className="w-full h-56 object-cover rounded-2xl" />
+            <img src={IMG.church} alt="Kerala Christian wedding crowning" className="w-full h-40 object-cover rounded-2xl" />
           </div>
           <div className="space-y-3 pt-8">
-            <img src={IMG.garland} alt="Garland exchange at a South Indian wedding" className="w-full h-40 object-cover rounded-2xl" />
-            <img src={IMG.baraat} alt="Baraat procession" className="w-full h-56 object-cover rounded-2xl" />
+            <img src={IMG.thali} alt="Kerala Hindu wedding mandapam" className="w-full h-40 object-cover rounded-2xl" />
+            <img src={IMG.oppana} alt="Oppana at a Kerala Muslim wedding" className="w-full h-56 object-cover rounded-2xl" />
           </div>
         </div>
       </section>

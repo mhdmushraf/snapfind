@@ -31,7 +31,7 @@ function PhoneMock() {
               <CheckCircle2 className="w-5 h-5 text-accent" />
             </div>
             <div className="grid grid-cols-3 gap-1.5">
-              {GALLERY.concat(GALLERY).concat(GALLERY).slice(0, 9).map((g, i) => (
+              {GALLERY.concat(GALLERY).slice(0, 9).map((g, i) => (
                 <img key={i} src={g.src} alt="" className="aspect-square w-full object-cover rounded-lg" />
               ))}
             </div>
@@ -105,8 +105,8 @@ export default function Home() {
           </div>
           <div className="relative">
             <PhoneMock />
-            <img src={IMG.walima} alt="Muslim wedding reception" className="hidden xl:block absolute -left-16 top-8 w-40 h-52 object-cover rounded-2xl shadow-2xl -rotate-6" />
-            <img src={IMG.crowning} alt="Kerala Christian wedding crowning" className="hidden xl:block absolute -right-12 bottom-16 w-36 h-44 object-cover rounded-2xl shadow-2xl rotate-6" />
+            <img src={IMG.oppana} alt="Oppana at a Kerala Muslim wedding" className="hidden xl:block absolute -left-16 top-8 w-40 h-52 object-cover rounded-2xl shadow-2xl -rotate-6" />
+            <img src={IMG.church} alt="Kerala Christian wedding crowning" className="hidden xl:block absolute -right-12 bottom-16 w-36 h-44 object-cover rounded-2xl shadow-2xl rotate-6" />
           </div>
         </div>
       </section>
@@ -167,10 +167,10 @@ export default function Home() {
             </ul>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            <img src={IMG.baraat} alt="Baraat procession" className="w-full h-64 object-cover rounded-2xl" />
-            <img src={IMG.crowning} alt="Kerala Christian wedding crowning" className="w-full h-64 object-cover rounded-2xl mt-8" />
-            <img src={IMG.walima} alt="Muslim wedding reception" className="w-full h-48 object-cover rounded-2xl" />
-            <img src={IMG.garland} alt="Garland exchange" className="w-full h-48 object-cover rounded-2xl mt-8" />
+            <img src={IMG.sadya} alt="Wedding sadya on banana leaves" className="w-full h-64 object-cover rounded-2xl" />
+            <img src={IMG.thali} alt="Kerala Hindu wedding mandapam" className="w-full h-64 object-cover rounded-2xl mt-8" />
+            <img src={IMG.haldi} alt="Haldi ceremony" className="w-full h-48 object-cover rounded-2xl" />
+            <img src={IMG.cakeCutting} alt="Kerala Christian wedding reception" className="w-full h-48 object-cover rounded-2xl mt-8" />
           </div>
         </div>
       </section>

@@ -3,14 +3,15 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import {
   ArrowLeft, Upload, Loader2, Images, QrCode as QrIcon, Settings2, Trash2,
-  Check, Copy, ExternalLink, AlertTriangle, X, Heart, Download,
+  Check, Copy, ExternalLink, AlertTriangle, X, Heart, Download, ScanFace,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
 import { uploadPhotos, validateFiles, ACCEPTED, MAX_FILE_MB, StorageNotConfigured } from '@/lib/upload';
-import { storageReady, thumbUrl } from '@/lib/storage';
+import { storageReady, thumbUrl, previewUrl } from '@/lib/storage';
 import { ensureStudio } from '@/lib/studio';
 import { guestUrl } from '@/lib/config';
+import { describeAll } from '@/lib/faces';
 
 export default function EventDetail() {
   const { id } = useParams();
@@ -27,6 +28,8 @@ export default function EventDetail() {
   const [rejected, setRejected] = useState([]);
   const [copied, setCopied] = useState(false);
   const [storageError, setStorageError] = useState(false);
+  const [indexing, setIndexing] = useState(null);
+  const [indexError, setIndexError] = useState('');
 
   const load = useCallback(async () => {
     try {
@@ -81,6 +84,49 @@ export default function EventDetail() {
       await base44.entities.Event.update(id, { status: event.photo_count > 0 ? 'live' : 'draft' });
     } finally {
       setProgress(null);
+      load();
+    }
+  };
+
+  const runIndexing = async () => {
+    const todo = photos.filter((p) => !p.indexed);
+    if (!todo.length) return;
+    setIndexError('');
+    setIndexing({ done: 0, total: todo.length, faces: 0 });
+    await base44.entities.Event.update(id, { status: 'processing', photos_processed: 0 });
+
+    let faces = 0;
+    let done = 0;
+    try {
+      for (const p of todo) {
+        try {
+          const descriptors = await describeAll(previewUrl(p.r2_key, 1200));
+          faces += descriptors.length;
+          await base44.entities.Photo.update(p.id, {
+            face_data: JSON.stringify(descriptors),
+            face_count: descriptors.length,
+            indexed: true,
+            status: 'processed',
+          });
+        } catch {
+          await base44.entities.Photo.update(p.id, { indexed: true, status: 'failed' }).catch(() => {});
+        }
+        done++;
+        setIndexing({ done, total: todo.length, faces });
+        if (done % 10 === 0) {
+          await base44.entities.Event.update(id, { photos_processed: done, faces_indexed: faces });
+        }
+      }
+      await base44.entities.Event.update(id, {
+        status: 'live',
+        photos_processed: (event.photo_count || 0),
+        faces_indexed: faces,
+      });
+    } catch (err) {
+      setIndexError(err?.message || 'Indexing stopped unexpectedly.');
+      await base44.entities.Event.update(id, { status: 'live' }).catch(() => {});
+    } finally {
+      setIndexing(null);
       load();
     }
   };

@@ -18,6 +18,7 @@ import Contact from '@/pages/Contact';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
+import GuestGallery from '@/pages/GuestGallery';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -48,6 +49,7 @@ const AuthenticatedApp = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/g/:slug" element={<GuestGallery />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/how-it-works" element={<Navigate to="/#how-it-works" replace />} />

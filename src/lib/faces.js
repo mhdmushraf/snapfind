@@ -97,6 +97,33 @@ export async function describeOne(src) {
   return result ? Array.from(result.descriptor) : null;
 }
 
+/**
+ * Analyse one image: every face descriptor, plus the quality signals used
+ * for culling. One decode, one pass — the image is already in memory.
+ */
+export async function analyzePhoto(src) {
+  const faceapi = await loadFaceApi();
+  const img = await loadImage(src);
+  const results = await faceapi
+    .detectAllFaces(img, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.45 }))
+    .withFaceLandmarks()
+    .withFaceDescriptors();
+
+  const { blurScore, averageHash, anyEyesClosed, qualityScore } = await import('@/lib/quality');
+  const blur = blurScore(img);
+  const eyesClosed = anyEyesClosed(results);
+  const descriptors = results.map((r) => Array.from(r.descriptor));
+
+  return {
+    descriptors,
+    faceCount: descriptors.length,
+    blur,
+    eyesClosed,
+    hash: averageHash(img),
+    quality: qualityScore({ blur, eyesClosed, faceCount: descriptors.length }),
+  };
+}
+
 export function distance(a, b) {
   let sum = 0;
   for (let i = 0; i < a.length; i++) {

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
+import { ensureStudio } from '@/lib/studio';
 
 const slug = () => Math.random().toString(36).slice(2, 10);
 const guestUrl = (s) => `${window.location.origin}/g/${s}`;
@@ -29,15 +30,11 @@ export default function Dashboard() {
 
   const load = useCallback(async () => {
     try {
-      const me = await base44.auth.me();
+      const { user: me, studio: s } = await ensureStudio();
       setUser(me);
-      const studios = await base44.entities.Studio.filter({ created_by_id: me.id });
-      const s = studios?.[0] || null;
       setStudio(s);
-      if (s) {
-        const list = await base44.entities.Event.filter({ studio_id: s.id }, '-event_date');
-        setEvents(list || []);
-      }
+      const list = await base44.entities.Event.filter({ studio_id: s.id }, '-event_date');
+      setEvents(list || []);
     } catch {
       // handled by ProtectedRoute
     } finally {

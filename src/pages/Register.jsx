@@ -123,8 +123,8 @@ export default function Register() {
 
       {/* Visual panel */}
       <div className="relative hidden lg:block overflow-hidden bg-primary order-1 lg:order-2">
-        <img src={IMG.bridalPrep} alt="" className="absolute inset-0 w-full h-full object-cover ken-burns" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-primary/15" />
+        <PhotoCycle images={[IMG.bridalPrep, IMG.haldi, IMG.thali, IMG.sadya]} seconds={28} />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/45 to-primary/20" />
 
         {/* Indexing card — boxes are drawn on tiles we control, so they always align */}
         <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[22rem] rounded-2xl bg-background/95 backdrop-blur p-5 shadow-2xl" style={{ animation: 'float 6s ease-in-out infinite' }}>
@@ -133,7 +133,7 @@ export default function Register() {
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-semibold">6,412 photos</span>
           </div>
           <div className="mt-4 grid grid-cols-3 gap-2">
-            {FACES.slice(0, 6).map((src, i) => (
+            {[IMG.sadya, IMG.thali, IMG.haldi, IMG.qrTable, IMG.groupPortrait, IMG.oppana].map((src, i) => (
               <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
                 <img src={src} alt="" className="w-full h-full object-cover" />
                 <div className="absolute inset-[22%] border-2 border-accent rounded" />

@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import {
   ArrowLeft, Upload, Loader2, Images, QrCode as QrIcon, Settings2, Trash2,
-  Check, Copy, ExternalLink, AlertTriangle, X,
+  Check, Copy, ExternalLink, AlertTriangle, X, Heart, Download,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
@@ -20,6 +20,7 @@ export default function EventDetail() {
   const [event, setEvent] = useState(null);
   const [studio, setStudio] = useState(null);
   const [photos, setPhotos] = useState([]);
+  const [selects, setSelects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('photos');
   const [progress, setProgress] = useState(null);
@@ -31,12 +32,14 @@ export default function EventDetail() {
     try {
       const e = await base44.entities.Event.get(id);
       setEvent(e);
-      const [s, p] = await Promise.all([
+      const [s, p, f] = await Promise.all([
         base44.entities.Studio.filter({ id: e.studio_id }),
         base44.entities.Photo.filter({ event_id: id }, 'sort_order', 200),
+        base44.entities.Favorite.filter({ event_id: id }),
       ]);
       setStudio(s?.[0] || null);
       setPhotos(p || []);
+      setSelects(f || []);
     } catch {
       setEvent(null);
     } finally {
@@ -186,7 +189,7 @@ export default function EventDetail() {
 
         {/* Tabs */}
         <div className="flex gap-1 mb-6 border-b border-border">
-          {[['photos', 'Photos', Images], ['share', 'Share', QrIcon], ['settings', 'Settings', Settings2]].map(([k, label, Icon]) => (
+          {[['photos', 'Photos', Images], ['selects', `Selects${selects.length ? ` (${selects.length})` : ''}`, Heart], ['share', 'Share', QrIcon], ['settings', 'Settings', Settings2]].map(([k, label, Icon]) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -228,6 +231,45 @@ export default function EventDetail() {
                   Showing the first {photos.length} of {event.photo_count.toLocaleString('en-IN')}.
                 </p>
               )}
+            </>
+          )
+        )}
+
+        {tab === 'selects' && (
+          selects.length === 0 ? (
+            <div className="rounded-3xl bg-background border border-dashed border-border p-12 text-center">
+              <Heart className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
+              <h2 className="font-heading text-xl font-bold">No selects yet</h2>
+              <p className="mt-2 text-sm text-muted-foreground max-w-sm mx-auto">
+                When guests tap the heart on a photo, it shows up here. Useful for album shortlists —
+                the couple picks, you don't chase screenshots.
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  {selects.length} photo{selects.length > 1 ? 's' : ''} saved by guests
+                </p>
+                <a
+                  href={`data:text/plain;charset=utf-8,${encodeURIComponent(selects.map((s) => s.photo_url).join('\n'))}`}
+                  download={`${event.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-selects.txt`}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"
+                >
+                  <Download className="w-4 h-4" /> Export list
+                </a>
+              </div>
+              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
+                {selects.map((s) => (
+                  <a
+                    key={s.id} href={s.photo_url} target="_blank" rel="noreferrer"
+                    className="aspect-square rounded-xl overflow-hidden bg-muted block relative group"
+                  >
+                    <img src={thumbUrl(s.photo_url, 400)} alt="" loading="lazy" className="w-full h-full object-cover" />
+                    <Heart className="absolute top-2 right-2 w-4 h-4 fill-accent text-accent drop-shadow" />
+                  </a>
+                ))}
+              </div>
             </>
           )
         )}

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import {
   Plus, LogOut, Calendar, MapPin, Images, Users, QrCode as QrIcon,
-  Loader2, X, Copy, Check, ExternalLink, Sparkles, Settings2,
+  Loader2, X, Copy, Check, ExternalLink, Sparkles, Settings2, Link2,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
@@ -128,7 +128,7 @@ export default function Dashboard() {
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {events.map((e) => (
-              <EventCard key={e.id} event={e} onQr={() => setQrFor(e)} />
+              <EventCard key={e.id} event={e} onQr={() => setQrFor(e)} parentName={e.parent_event_id ? events.find((x) => x.id === e.parent_event_id)?.name : null} />
             ))}
           </div>
         )}
@@ -169,7 +169,7 @@ function EmptyState({ onCreate }) {
   );
 }
 
-function EventCard({ event, onQr }) {
+function EventCard({ event, onQr, parentName }) {
   const [label, cls] = STATUS[event.status] || STATUS.draft;
   const pct = event.photo_count ? Math.round((event.photos_processed / event.photo_count) * 100) : 0;
 
@@ -177,7 +177,14 @@ function EventCard({ event, onQr }) {
     <div className="rounded-2xl bg-background border border-border p-5 hover:border-primary/40 transition">
       <Link to={`/event/${event.id}`} className="block">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="font-heading text-lg font-semibold leading-snug hover:text-accent transition">{event.name}</h3>
+          <div className="min-w-0">
+            <h3 className="font-heading text-lg font-semibold leading-snug hover:text-accent transition">{event.name}</h3>
+            {event.parent_event_id && parentName && (
+              <span className="inline-flex items-center gap-1 mt-1 text-[11px] text-muted-foreground">
+                <Link2 className="w-3 h-3" /> part of {parentName}
+              </span>
+            )}
+          </div>
           <span className={`shrink-0 text-[11px] px-2.5 py-1 rounded-full font-semibold ${cls}`}>{label}</span>
         </div>
       </Link>

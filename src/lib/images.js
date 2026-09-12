@@ -56,3 +56,6 @@ export const GALLERY = [
 /** Deal n distinct photos from an offset so a page never repeats a frame. */
 export const pick = (n, offset = 0) =>
   Array.from({ length: n }, (_, i) => GALLERY[(offset + i) % GALLERY.length]);
+
+/** All imagery is AI-generated (Gemini / Nano Banana Pro) — no stock credits required. */
+export const IMAGE_CREDIT = 'Imagery AI-generated — no stock credits.';

@@ -1,0 +1,54 @@
+{
+  "name": "TeamMember",
+  "properties": {
+    "email": {
+      "description": "Email of the person invited",
+      "type": "string"
+    },
+    "invited_at": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "default": "shooter",
+      "enum": [
+        "owner",
+        "shooter",
+        "editor"
+      ],
+      "type": "string"
+    },
+    "status": {
+      "default": "invited",
+      "enum": [
+        "invited",
+        "active",
+        "removed"
+      ],
+      "type": "string"
+    },
+    "studio_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "studio_id",
+    "email"
+  ],
+  "rls": {
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    },
+    "read": {},
+    "update": {
+      "created_by_id": "{{user.id}}"
+    }
+  },
+  "type": "object"
+}

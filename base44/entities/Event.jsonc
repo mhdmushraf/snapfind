@@ -9,6 +9,11 @@
       "default": true,
       "type": "boolean"
     },
+    "allow_orders": {
+      "default": false,
+      "description": "Guests can order prints and full-res downloads",
+      "type": "boolean"
+    },
     "cover_photo_id": {
       "type": "string"
     },
@@ -24,12 +29,34 @@
       "default": 0,
       "type": "number"
     },
+    "function_type": {
+      "default": "wedding",
+      "description": "Which function this is within a multi-event package",
+      "enum": [
+        "wedding",
+        "nikah",
+        "engagement",
+        "haldi",
+        "mehndi",
+        "reception",
+        "sangeet",
+        "church",
+        "other"
+      ],
+      "type": "string"
+    },
+    "groups_data": {
+      "description": "JSON of clustered face groups: [{id,label,descriptor,photo_ids,cover}]",
+      "type": "string"
+    },
     "name": {
-      "description": "e.g. Anjali & Rahul Wedding",
+      "type": "string"
+    },
+    "parent_event_id": {
+      "description": "Set when this event is one function inside a package",
       "type": "string"
     },
     "password": {
-      "description": "Optional guest access password",
       "type": "string"
     },
     "photo_count": {
@@ -41,7 +68,6 @@
       "type": "number"
     },
     "qr_slug": {
-      "description": "Unique 8-char public slug used in QR URL",
       "type": "string"
     },
     "status": {
@@ -56,7 +82,6 @@
       "type": "string"
     },
     "studio_id": {
-      "description": "Studio entity id",
       "type": "string"
     },
     "venue": {

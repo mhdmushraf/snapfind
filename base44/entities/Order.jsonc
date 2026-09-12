@@ -1,0 +1,66 @@
+{
+  "name": "Order",
+  "properties": {
+    "device_id": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "guest_name": {
+      "type": "string"
+    },
+    "items": {
+      "description": "JSON array of {photo_id, photo_url, product, qty, unit_price}",
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "payment_ref": {
+      "description": "Razorpay payment id once paid",
+      "type": "string"
+    },
+    "phone": {
+      "description": "WhatsApp number for delivery updates",
+      "type": "string"
+    },
+    "status": {
+      "default": "pending",
+      "enum": [
+        "pending",
+        "paid",
+        "fulfilled",
+        "cancelled"
+      ],
+      "type": "string"
+    },
+    "studio_id": {
+      "type": "string"
+    },
+    "studio_share": {
+      "description": "Amount owed to the studio, INR",
+      "type": "number"
+    },
+    "total": {
+      "description": "Order total in INR",
+      "type": "number"
+    }
+  },
+  "required": [
+    "event_id",
+    "items",
+    "total"
+  ],
+  "rls": {
+    "create": {},
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {}
+  },
+  "type": "object"
+}

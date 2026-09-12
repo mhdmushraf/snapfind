@@ -11,7 +11,8 @@ import { uploadPhotos, validateFiles, ACCEPTED, MAX_FILE_MB, StorageNotConfigure
 import { storageReady, thumbUrl, previewUrl } from '@/lib/storage';
 import { ensureStudio } from '@/lib/studio';
 import { guestUrl } from '@/lib/config';
-import { describeAll } from '@/lib/faces';
+import { describeAll, analyzePhoto } from '@/lib/faces';
+import { hammingDistance, DUPLICATE_BITS, CULL_BELOW } from '@/lib/quality';
 
 export default function EventDetail() {
   const { id } = useParams();
@@ -22,6 +23,7 @@ export default function EventDetail() {
   const [studio, setStudio] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [selects, setSelects] = useState([]);
+  const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('photos');
   const [progress, setProgress] = useState(null);
@@ -35,14 +37,16 @@ export default function EventDetail() {
     try {
       const e = await base44.entities.Event.get(id);
       setEvent(e);
-      const [s, p, f] = await Promise.all([
+      const [s, p, f, g] = await Promise.all([
         base44.entities.Studio.filter({ id: e.studio_id }),
         base44.entities.Photo.filter({ event_id: id }, 'sort_order', 200),
         base44.entities.Favorite.filter({ event_id: id }),
+        base44.entities.GuestSession.filter({ event_id: id }, '-created_date', 100),
       ]);
       setStudio(s?.[0] || null);
       setPhotos(p || []);
       setSelects(f || []);
+      setSessions(g || []);
     } catch {
       setEvent(null);
     } finally {
@@ -97,14 +101,32 @@ export default function EventDetail() {
 
     let faces = 0;
     let done = 0;
+    const hashes = photos.filter((p) => p.image_hash).map((p) => ({ id: p.id, hash: p.image_hash, quality: p.quality_score || 0 }));
+
     try {
       for (const p of todo) {
         try {
-          const descriptors = await describeAll(previewUrl(p.r2_key, 1200));
-          faces += descriptors.length;
+          const a = await analyzePhoto(previewUrl(p.r2_key, 1200));
+          faces += a.faceCount;
+
+          // Near-duplicate check against everything seen so far
+          let dupOf = null;
+          for (const h of hashes) {
+            if (hammingDistance(a.hash, h.hash) <= DUPLICATE_BITS) {
+              dupOf = a.quality > h.quality ? null : h.id;
+              break;
+            }
+          }
+          hashes.push({ id: p.id, hash: a.hash, quality: a.quality });
+
           await base44.entities.Photo.update(p.id, {
-            face_data: JSON.stringify(descriptors),
-            face_count: descriptors.length,
+            face_data: JSON.stringify(a.descriptors),
+            face_count: a.faceCount,
+            blur_score: a.blur,
+            eyes_closed: a.eyesClosed,
+            image_hash: a.hash,
+            quality_score: a.quality,
+            duplicate_of: dupOf || '',
             indexed: true,
             status: 'processed',
           });

@@ -1,43 +1,51 @@
 /**
  * Photo upload queue.
  *
- * PHASE 2 (now): uploads through Base44's Core.UploadFile integration.
- * Good for pilot events of a few hundred photos. Each file costs one
- * integration credit, so this is NOT the shape for 8,000-photo weddings.
+ * Files go BROWSER → CLOUDINARY directly. They never pass through Base44,
+ * so no integration credits are consumed. Base44 only stores the returned
+ * URL in a Photo record, which is an ordinary database write.
  *
- * PHASE 2b (when Cloudflare R2 is set up): replace `uploadOne` with a
- * presigned PUT straight to R2. Nothing else in this file changes — the
- * queue, concurrency, retry and progress reporting all stay as they are.
+ * To move to Cloudflare R2 later, replace `uploadOne` with a presigned PUT.
+ * Nothing else in this file needs to change.
  */
 import { base44 } from '@/api/base44Client';
+import { STORAGE, storageReady } from '@/lib/storage';
 
 const CONCURRENCY = 4;
 const MAX_RETRIES = 2;
 
-async function uploadOne(file) {
-  const { file_url } = await base44.integrations.Core.UploadFile({ file });
-  return file_url;
+export class StorageNotConfigured extends Error {
+  constructor() {
+    super('Photo storage is not set up yet. See src/lib/storage.js for the 5-minute setup.');
+    this.name = 'StorageNotConfigured';
+  }
 }
 
-function readDimensions(file) {
-  return new Promise((resolve) => {
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      URL.revokeObjectURL(url);
-      resolve({ width: img.naturalWidth, height: img.naturalHeight });
-    };
-    img.onerror = () => { URL.revokeObjectURL(url); resolve({ width: 0, height: 0 }); };
-    img.src = url;
-  });
+async function uploadOne(file, eventId) {
+  const form = new FormData();
+  form.append('file', file);
+  form.append('upload_preset', STORAGE.uploadPreset);
+  form.append('folder', `snapfind/${eventId}`);
+
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${STORAGE.cloudName}/image/upload`,
+    { method: 'POST', body: form }
+  );
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    throw new Error(`Upload failed (${res.status}) ${detail.slice(0, 120)}`);
+  }
+  const data = await res.json();
+  return { url: data.secure_url, width: data.width, height: data.height };
 }
 
 /**
  * Upload `files` for an event, creating a Photo record per file.
  * Calls onProgress({ done, total, failed }) as it goes.
- * Returns { uploaded, failed }.
  */
 export async function uploadPhotos({ files, eventId, studioId, onProgress }) {
+  if (!storageReady()) throw new StorageNotConfigured();
+
   const total = files.length;
   let done = 0;
   let failed = 0;
@@ -49,15 +57,15 @@ export async function uploadPhotos({ files, eventId, studioId, onProgress }) {
       let attempt = 0;
       while (attempt <= MAX_RETRIES) {
         try {
-          const [url, dims] = await Promise.all([uploadOne(file), readDimensions(file)]);
+          const { url, width, height } = await uploadOne(file, eventId);
           await base44.entities.Photo.create({
             event_id: eventId,
             studio_id: studioId,
             r2_key: url,
             original_filename: file.name,
             file_size: file.size,
-            width: dims.width,
-            height: dims.height,
+            width,
+            height,
             status: 'uploaded',
             sort_order: index,
           });
@@ -65,7 +73,7 @@ export async function uploadPhotos({ files, eventId, studioId, onProgress }) {
         } catch (err) {
           attempt++;
           if (attempt > MAX_RETRIES) { failed++; break; }
-          await new Promise((r) => setTimeout(r, 400 * attempt));
+          await new Promise((r) => setTimeout(r, 500 * attempt));
         }
       }
       done++;

@@ -2,29 +2,26 @@
   "name": "Photo",
   "properties": {
     "blur_score": {
-      "description": "0-100, higher = sharper (Laplacian variance normalised)",
+      "description": "0-100, higher = sharper",
       "type": "number"
     },
     "culled": {
       "default": false,
-      "description": "Photographer hid this frame from the gallery",
       "type": "boolean"
     },
     "duplicate_of": {
-      "description": "Photo id of the best frame in the same burst group, if this is a near-duplicate",
       "type": "string"
     },
     "event_id": {
       "type": "string"
     },
-    "eyes_closed": {
-      "default": false,
-      "description": "Any main face has eyes closed",
-      "type": "boolean"
-    },
     "face_count": {
       "default": 0,
       "type": "number"
+    },
+    "face_data": {
+      "description": "JSON array of 128-number face descriptors, one per face found in this photo",
+      "type": "string"
     },
     "file_size": {
       "type": "number"
@@ -32,19 +29,22 @@
     "height": {
       "type": "number"
     },
+    "indexed": {
+      "default": false,
+      "description": "True once face descriptors have been computed",
+      "type": "boolean"
+    },
     "original_filename": {
       "type": "string"
     },
     "preview_key": {
-      "description": "1600px watermarked preview key, set by worker",
       "type": "string"
     },
     "quality_score": {
-      "description": "0-100 overall keep score from culling pass",
       "type": "number"
     },
     "r2_key": {
-      "description": "Object key of the original in R2",
+      "description": "Public URL of the stored image",
       "type": "string"
     },
     "sort_order": {
@@ -68,7 +68,6 @@
       "type": "string"
     },
     "thumb_key": {
-      "description": "400px webp thumbnail key, set by worker",
       "type": "string"
     },
     "width": {

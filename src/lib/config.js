@@ -10,5 +10,12 @@
  */
 export const PUBLIC_BASE_URL = 'https://snapfind.base44.app';
 
-/** Full guest gallery URL for an event slug. */
-export const guestUrl = (slug) => `${PUBLIC_BASE_URL}/g/${slug}`;
+/**
+ * Full guest gallery URL for an event slug.
+ * Pass the studio to use its connected custom domain instead of the default.
+ */
+export const guestUrl = (slug, studio) => {
+  const host = studio?.custom_domain?.trim();
+  const base = host ? `https://${host.replace(/^https?:\/\//, '').replace(/\/$/, '')}` : PUBLIC_BASE_URL;
+  return `${base}/g/${slug}`;
+};

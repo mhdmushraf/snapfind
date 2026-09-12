@@ -32,7 +32,7 @@
 export const STORAGE = {
   provider: 'cloudinary',
   cloudName: 'ves1ve5j',
-  uploadPreset: '',   // ← paste your unsigned upload preset name here
+  uploadPreset: 'snapfind_unsigned',
 };
 
 export const storageReady = () =>

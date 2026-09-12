@@ -8,9 +8,9 @@ import {
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
 import { ensureStudio } from '@/lib/studio';
+import { guestUrl } from '@/lib/config';
 
 const slug = () => Math.random().toString(36).slice(2, 10);
-const guestUrl = (s) => `${window.location.origin}/g/${s}`;
 
 const STATUS = {
   draft:      ['Draft', 'bg-muted text-muted-foreground'],

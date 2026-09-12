@@ -82,7 +82,13 @@ export default function Contact() {
             </div>
           </div>
 
-          <img src={IMG.qrTable} alt="Guests finding their photos at a wedding reception" className="mt-10 w-full h-64 object-cover rounded-2xl" />
+          <div className="mt-10 grid grid-cols-2 gap-3">
+            <img src={IMG.bridalPrep} alt="Bride with her family before the ceremony" className="w-full h-64 object-cover rounded-2xl" />
+            <div className="space-y-3">
+              <img src={IMG.haldi} alt="Haldi ceremony in a Kerala courtyard" className="w-full h-[7.75rem] object-cover rounded-2xl" />
+              <img src={IMG.photographer} alt="Wedding photographer at work" className="w-full h-[7.75rem] object-cover rounded-2xl" />
+            </div>
+          </div>
         </div>
 
         <div className="rounded-3xl border border-border p-6 sm:p-8 h-fit">

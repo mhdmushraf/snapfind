@@ -179,6 +179,91 @@ export default function GuestGallery() {
   const expired = event.status === 'expired';
   const favCount = Object.keys(favs).length;
 
+  /* ---- selfie results ---- */
+  if (results !== null) {
+    return (
+      <Shell studio={studio} wide>
+        <button onClick={() => { setResults(null); setSearchError(''); }} className="inline-flex items-center gap-1.5 text-sm text-accent font-medium hover:underline">
+          <ArrowLeft className="w-4 h-4" /> Back
+        </button>
+
+        {results.length === 0 ? (
+          <div className="mt-6 rounded-2xl border border-border bg-background p-8 text-center">
+            <Camera className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
+            <h1 className="font-heading text-xl font-bold">No photos found with you in them</h1>
+            <p className="mt-2 text-sm text-muted-foreground max-w-sm mx-auto">
+              Try another selfie in better light, or browse the full gallery — you might be in a group shot
+              the match missed.
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+              <button onClick={() => setCamera(true)} className="px-5 py-3 rounded-full bg-accent text-accent-foreground font-semibold">
+                Try another selfie
+              </button>
+              {event.allow_full_gallery && (
+                <button onClick={() => { setResults(null); setBrowsing(true); }} className="px-5 py-3 rounded-full border border-border font-medium">
+                  Browse all photos
+                </button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="mt-3 flex items-end justify-between gap-4">
+              <div>
+                <h1 className="font-heading text-2xl font-bold">Found {results.length} photo{results.length > 1 ? 's' : ''} of you</h1>
+                <p className="mt-1 text-sm text-muted-foreground">Tap any photo to view it full size.</p>
+              </div>
+              {favCount > 0 && (
+                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-accent shrink-0">
+                  <Heart className="w-4 h-4 fill-current" /> {favCount}
+                </span>
+              )}
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {results.map((p) => (
+                <div key={p.id} className="relative aspect-square rounded-xl overflow-hidden bg-muted group">
+                  <button onClick={() => setLightbox(p)} className="w-full h-full">
+                    <img src={thumbUrl(p.r2_key, 400)} alt="" loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  </button>
+                  <button
+                    onClick={() => toggleFav(p)}
+                    className="absolute top-2 right-2 p-1.5 rounded-full bg-background/85 backdrop-blur hover:bg-background transition"
+                    aria-label={favs[p.id] ? 'Remove from selects' : 'Save photo'}
+                  >
+                    <Heart className={`w-4 h-4 ${favs[p.id] ? 'fill-accent text-accent' : 'text-foreground'}`} />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <button onClick={() => setCamera(true)} className="flex-1 py-3 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition">
+                Search a different face
+              </button>
+              {event.allow_full_gallery && (
+                <button onClick={() => { setResults(null); setBrowsing(true); }} className="flex-1 py-3 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition">
+                  Browse all {photos.length} photos
+                </button>
+              )}
+            </div>
+          </>
+        )}
+
+        {lightbox && (
+          <Lightbox
+            photo={lightbox}
+            allowDownload={event.allow_download}
+            isFav={!!favs[lightbox.id]}
+            onFav={() => toggleFav(lightbox)}
+            onClose={() => setLightbox(null)}
+          />
+        )}
+        {camera && <SelfieCapture onCapture={onSelfie} onClose={() => setCamera(false)} />}
+      </Shell>
+    );
+  }
+
   /* ---- full gallery view ---- */
   if (browsing) {
     return (
@@ -280,24 +365,23 @@ export default function GuestGallery() {
             </label>
 
             <button
-              disabled={!consent}
+              disabled={!consent || searching}
               onClick={() => setCamera(true)}
-              className="mt-5 w-full py-3.5 rounded-full bg-accent text-accent-foreground font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed"
+              className="mt-5 w-full py-3.5 rounded-full bg-accent text-accent-foreground font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
             >
-              Open camera
+              {searching ? <><Loader2 className="w-4 h-4 animate-spin" /> Searching…</> : 'Open camera'}
             </button>
-            {searched && (
-              <div className="mt-4 rounded-xl bg-secondary/60 p-4 text-left">
-                <p className="text-sm font-medium">Selfie received</p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Face matching isn't switched on for this gallery yet. Browse all the photos below —
-                  your photographer will enable matching soon.
-                </p>
-              </div>
+            {searchError && (
+              <p className="mt-4 text-sm text-destructive bg-destructive/10 px-4 py-3 rounded-xl text-left">{searchError}</p>
             )}
-            {!searched && (
+            {searching && (
               <p className="mt-3 text-[11px] text-muted-foreground">
-                Your selfie is used once and deleted within 24 hours.
+                Matching happens on your phone. Nothing is uploaded.
+              </p>
+            )}
+            {!searching && !searchError && (
+              <p className="mt-3 text-[11px] text-muted-foreground">
+                Your selfie never leaves your phone — matching runs right here in the browser.
               </p>
             )}
           </div>

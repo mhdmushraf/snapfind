@@ -18,6 +18,7 @@ import Contact from '@/pages/Contact';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
+import EventDetail from '@/pages/EventDetail';
 import GuestGallery from '@/pages/GuestGallery';
 // Add page imports here
 
@@ -65,6 +66,7 @@ const AuthenticatedApp = () => {
       </Route>
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/event/:id" element={<EventDetail />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

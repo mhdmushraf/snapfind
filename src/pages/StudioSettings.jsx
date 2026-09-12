@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { ArrowLeft, Loader2, Upload, Check, Trash2, Building2, MapPin, Phone } from 'lucide-react';
+import { ArrowLeft, Loader2, Upload, Check, Trash2, Building2, MapPin, Phone, Globe, UserPlus, X, IndianRupee } from 'lucide-react';
 import Logo from '@/components/Logo';
 import { STORAGE, storageReady, thumbUrl } from '@/lib/storage';
 import { ensureStudio } from '@/lib/studio';
@@ -28,12 +28,17 @@ export default function StudioSettings() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState('');
   const [saved, setSaved] = useState(false);
+  const [team, setTeam] = useState([]);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('shooter');
 
   useEffect(() => {
     (async () => {
       try {
         const { studio: s } = await ensureStudio();
         setStudio(s);
+        const t = await base44.entities.TeamMember.filter({ studio_id: s.id });
+        setTeam((t || []).filter((m) => m.status !== 'removed'));
       } catch {
         setStudio(null);
       } finally {
@@ -141,7 +146,6 @@ export default function StudioSettings() {
 
         {/* Plan */}
         <section className="rounded-2xl bg-background border border-border p-6">
-          <h2 className="font-heading text-lg font-semibold">Plan</h2>
           <div className="mt-4 flex items-center justify-between">
             <div>
               <div className="font-medium capitalize">{studio.plan || 'trial'}</div>

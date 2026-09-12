@@ -1,0 +1,305 @@
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { base44 } from '@/api/base44Client';
+import {
+  ArrowLeft, Upload, Loader2, Images, QrCode as QrIcon, Settings2, Trash2,
+  Check, Copy, ExternalLink, AlertTriangle, X,
+} from 'lucide-react';
+import Logo from '@/components/Logo';
+import QRCode from '@/components/QRCode';
+import { uploadPhotos, validateFiles, ACCEPTED, MAX_FILE_MB } from '@/lib/upload';
+
+const guestUrl = (s) => `${window.location.origin}/g/${s}`;
+
+export default function EventDetail() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const fileInput = useRef(null);
+
+  const [event, setEvent] = useState(null);
+  const [studio, setStudio] = useState(null);
+  const [photos, setPhotos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState('photos');
+  const [progress, setProgress] = useState(null);
+  const [rejected, setRejected] = useState([]);
+  const [copied, setCopied] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      const e = await base44.entities.Event.get(id);
+      setEvent(e);
+      const [s, p] = await Promise.all([
+        base44.entities.Studio.filter({ id: e.studio_id }),
+        base44.entities.Photo.filter({ event_id: id }, 'sort_order', 200),
+      ]);
+      setStudio(s?.[0] || null);
+      setPhotos(p || []);
+    } catch {
+      setEvent(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const onPick = async (e) => {
+    const { ok, rejected: bad } = validateFiles(e.target.files);
+    setRejected(bad);
+    e.target.value = '';
+    if (!ok.length) return;
+
+    setProgress({ done: 0, total: ok.length, failed: 0 });
+    await base44.entities.Event.update(id, { status: 'uploading' });
+
+    const { uploaded } = await uploadPhotos({
+      files: ok,
+      eventId: id,
+      studioId: event.studio_id,
+      onProgress: setProgress,
+    });
+
+    const newCount = (event.photo_count || 0) + uploaded;
+    await base44.entities.Event.update(id, {
+      photo_count: newCount,
+      status: newCount > 0 ? 'live' : 'draft',
+    });
+    if (studio) {
+      await base44.entities.Studio.update(studio.id, {
+        photo_credits: Math.max(0, (studio.photo_credits || 0) - uploaded),
+      });
+    }
+    setProgress(null);
+    load();
+  };
+
+  const patch = async (fields) => {
+    setEvent((e) => ({ ...e, ...fields }));
+    await base44.entities.Event.update(id, fields);
+  };
+
+  const remove = async () => {
+    if (!confirm('Delete this event and all its photos? This cannot be undone.')) return;
+    await Promise.all(photos.map((p) => base44.entities.Photo.delete(p.id).catch(() => {})));
+    await base44.entities.Event.delete(id);
+    navigate('/dashboard');
+  };
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-accent" /></div>;
+  }
+  if (!event) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <p className="text-muted-foreground">Event not found.</p>
+        <Link to="/dashboard" className="text-accent font-medium hover:underline">Back to dashboard</Link>
+      </div>
+    );
+  }
+
+  const url = guestUrl(event.qr_slug);
+
+  return (
+    <div className="min-h-screen bg-secondary/25">
+      <header className="bg-background border-b border-border sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+          <Logo to="/dashboard" />
+          <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition">
+            <ArrowLeft className="w-4 h-4" /> All events
+          </Link>
+        </div>
+      </header>
+
+      <main className="max-w-6xl mx-auto px-5 sm:px-8 py-8">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-7">
+          <div>
+            <h1 className="font-heading text-3xl font-bold">{event.name}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {(event.photo_count || 0).toLocaleString('en-IN')} photos
+              {event.venue && ` · ${event.venue}`}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => fileInput.current?.click()}
+              disabled={!!progress}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-accent text-accent-foreground font-semibold hover:opacity-90 transition disabled:opacity-60"
+            >
+              <Upload className="w-4 h-4" /> Upload photos
+            </button>
+            <input ref={fileInput} type="file" multiple accept={ACCEPTED} onChange={onPick} className="hidden" />
+          </div>
+        </div>
+
+        {progress && (
+          <div className="mb-6 rounded-2xl bg-background border border-border p-5">
+            <div className="flex justify-between text-sm font-medium">
+              <span>Uploading…</span>
+              <span>{progress.done} of {progress.total}</span>
+            </div>
+            <div className="mt-3 h-2 rounded-full bg-muted overflow-hidden">
+              <div className="h-full bg-accent rounded-full transition-all" style={{ width: `${(progress.done / progress.total) * 100}%` }} />
+            </div>
+            {progress.failed > 0 && (
+              <p className="mt-2 text-xs text-destructive">{progress.failed} failed — they'll be skipped.</p>
+            )}
+            <p className="mt-2 text-xs text-muted-foreground">Keep this tab open until it finishes.</p>
+          </div>
+        )}
+
+        {rejected.length > 0 && (
+          <div className="mb-6 rounded-2xl bg-destructive/5 border border-destructive/20 p-4 flex items-start gap-3">
+            <AlertTriangle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+            <div className="flex-1 text-sm">
+              <p className="font-medium">{rejected.length} file{rejected.length > 1 ? 's' : ''} skipped</p>
+              <ul className="mt-1 text-xs text-muted-foreground space-y-0.5">
+                {rejected.slice(0, 5).map(([n, why]) => <li key={n}>{n} — {why}</li>)}
+              </ul>
+            </div>
+            <button onClick={() => setRejected([])} className="p-1 rounded hover:bg-background"><X className="w-4 h-4" /></button>
+          </div>
+        )}
+
+        {/* Tabs */}
+        <div className="flex gap-1 mb-6 border-b border-border">
+          {[['photos', 'Photos', Images], ['share', 'Share', QrIcon], ['settings', 'Settings', Settings2]].map(([k, label, Icon]) => (
+            <button
+              key={k}
+              onClick={() => setTab(k)}
+              className={`inline-flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 -mb-px transition ${
+                tab === k ? 'border-accent text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Icon className="w-4 h-4" /> {label}
+            </button>
+          ))}
+        </div>
+
+        {tab === 'photos' && (
+          photos.length === 0 ? (
+            <div className="rounded-3xl bg-background border border-dashed border-border p-12 text-center">
+              <Images className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
+              <h2 className="font-heading text-xl font-bold">No photos yet</h2>
+              <p className="mt-2 text-sm text-muted-foreground max-w-sm mx-auto">
+                Upload JPEG, PNG, WebP or HEIC, up to {MAX_FILE_MB} MB each. Start with a small batch to check it works.
+              </p>
+              <button
+                onClick={() => fileInput.current?.click()}
+                className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent text-accent-foreground font-semibold hover:opacity-90 transition"
+              >
+                <Upload className="w-4 h-4" /> Choose photos
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2">
+                {photos.map((p) => (
+                  <div key={p.id} className="aspect-square rounded-xl overflow-hidden bg-muted">
+                    <img src={p.r2_key} alt={p.original_filename} loading="lazy" className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+              {event.photo_count > photos.length && (
+                <p className="mt-4 text-center text-xs text-muted-foreground">
+                  Showing the first {photos.length} of {event.photo_count.toLocaleString('en-IN')}.
+                </p>
+              )}
+            </>
+          )
+        )}
+
+        {tab === 'share' && (
+          <div className="grid lg:grid-cols-2 gap-6">
+            <div className="rounded-2xl bg-background border border-border p-6 flex flex-col items-center">
+              <QRCode value={url} size={220} className="border border-border" />
+              <p className="mt-4 text-sm text-muted-foreground text-center">
+                Print on table cards. Guests scan and find their own photos.
+              </p>
+            </div>
+            <div className="rounded-2xl bg-background border border-border p-6">
+              <h3 className="font-semibold">Gallery link</h3>
+              <div className="mt-3 flex items-center gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5">
+                <span className="flex-1 text-xs truncate font-mono">{url}</span>
+                <button
+                  onClick={() => { navigator.clipboard?.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
+                  className="shrink-0 p-1.5 rounded-lg hover:bg-background transition"
+                >
+                  {copied ? <Check className="w-4 h-4 text-accent" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+              <a
+                href={url} target="_blank" rel="noreferrer"
+                className="mt-4 w-full inline-flex items-center justify-center gap-2 py-3 rounded-full border border-border font-medium hover:border-foreground/40 transition"
+              >
+                <ExternalLink className="w-4 h-4" /> Preview as a guest
+              </a>
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(`Photos from ${event.name} are ready. Find yours here: ${url}`)}`}
+                target="_blank" rel="noreferrer"
+                className="mt-3 w-full inline-flex items-center justify-center gap-2 py-3 rounded-full bg-[#25D366] text-white font-semibold hover:opacity-90 transition"
+              >
+                Share on WhatsApp
+              </a>
+            </div>
+          </div>
+        )}
+
+        {tab === 'settings' && (
+          <div className="max-w-xl space-y-3">
+            {[
+              ['allow_full_gallery', 'Let guests browse all photos', 'Otherwise they only see their own matches.'],
+              ['allow_download', 'Allow full-resolution downloads', 'Off means watermarked previews only.'],
+              ['watermark_previews', 'Watermark previews', 'Your studio watermark on every preview image.'],
+            ].map(([key, label, help]) => (
+              <label key={key} className="flex items-start gap-3 rounded-2xl bg-background border border-border p-5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={!!event[key]}
+                  onChange={(e) => patch({ [key]: e.target.checked })}
+                  className="mt-0.5 w-4 h-4 accent-[hsl(var(--accent))]"
+                />
+                <span>
+                  <span className="block font-medium text-sm">{label}</span>
+                  <span className="block text-xs text-muted-foreground mt-0.5">{help}</span>
+                </span>
+              </label>
+            ))}
+
+            <div className="rounded-2xl bg-background border border-border p-5">
+              <label className="block">
+                <span className="text-sm font-medium">Gallery password</span>
+                <span className="block text-xs text-muted-foreground mt-0.5 mb-2.5">Optional. Leave blank for open access.</span>
+                <input
+                  defaultValue={event.password || ''}
+                  onBlur={(e) => patch({ password: e.target.value })}
+                  className="input" placeholder="No password"
+                />
+              </label>
+            </div>
+
+            <div className="rounded-2xl bg-background border border-border p-5">
+              <label className="block">
+                <span className="text-sm font-medium">Gallery closes on</span>
+                <span className="block text-xs text-muted-foreground mt-0.5 mb-2.5">Photos and face data are deleted after this date.</span>
+                <input
+                  type="date"
+                  defaultValue={event.expires_on || ''}
+                  onBlur={(e) => patch({ expires_on: e.target.value })}
+                  className="input"
+                />
+              </label>
+            </div>
+
+            <button
+              onClick={remove}
+              className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-destructive/30 text-destructive font-medium hover:bg-destructive/5 transition"
+            >
+              <Trash2 className="w-4 h-4" /> Delete this event
+            </button>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}

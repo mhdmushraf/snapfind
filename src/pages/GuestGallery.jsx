@@ -57,7 +57,8 @@ export default function GuestGallery() {
         base44.entities.Favorite.filter({ event_id: e.id, device_id: deviceId() }),
       ]);
       setStudio(s?.[0] || null);
-      setPhotos(p || []);
+      // Culled frames never reach guests.
+      setPhotos((p || []).filter((x) => !x.culled));
       setFavs(Object.fromEntries((f || []).map((x) => [x.photo_id, x.id])));
     } catch {
       setEvent(null);

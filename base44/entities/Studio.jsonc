@@ -4,16 +4,23 @@
     "city": {
       "type": "string"
     },
+    "custom_domain": {
+      "description": "e.g. gallery.menonstudio.com \u2014 used for QR codes and gallery links once DNS is pointed at the app",
+      "type": "string"
+    },
+    "download_price": {
+      "default": 49,
+      "description": "INR per full-resolution download",
+      "type": "number"
+    },
     "logo_url": {
       "format": "uri",
       "type": "string"
     },
     "name": {
-      "description": "Studio or photographer business name",
       "type": "string"
     },
     "owner_email": {
-      "description": "Email of the studio owner user",
       "type": "string"
     },
     "phone": {
@@ -21,7 +28,6 @@
     },
     "photo_credits": {
       "default": 5000,
-      "description": "Photos remaining on current plan",
       "type": "number"
     },
     "plan": {
@@ -33,9 +39,18 @@
       ],
       "type": "string"
     },
+    "print_price": {
+      "default": 299,
+      "description": "INR per print",
+      "type": "number"
+    },
     "r2_prefix": {
-      "description": "Unique storage prefix, e.g. studio_a1b2c3",
       "type": "string"
+    },
+    "revenue_share": {
+      "default": 70,
+      "description": "Percent of guest orders kept by the studio",
+      "type": "number"
     },
     "watermark_url": {
       "format": "uri",
@@ -53,18 +68,7 @@
         "role": "admin"
       }
     },
-    "read": {
-      "$or": [
-        {
-          "created_by_id": "{{user.id}}"
-        },
-        {
-          "user_condition": {
-            "role": "admin"
-          }
-        }
-      ]
-    },
+    "read": {},
     "update": {
       "$or": [
         {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import {
   Plus, LogOut, Calendar, MapPin, Images, Users, QrCode as QrIcon,
-  Loader2, X, Copy, Check, ExternalLink, Sparkles,
+  Loader2, X, Copy, Check, ExternalLink, Sparkles, Settings2,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
@@ -64,8 +64,14 @@ export default function Dashboard() {
       <header className="bg-background border-b border-border sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
           <Logo to="/dashboard" />
-          <div className="flex items-center gap-3">
-            <span className="hidden sm:block text-sm text-muted-foreground">{studio?.name || user?.full_name}</span>
+          <div className="flex items-center gap-2">
+            <span className="hidden sm:block text-sm text-muted-foreground mr-1">{studio?.name || user?.full_name}</span>
+            <Link
+              to="/studio-settings"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"
+            >
+              <Settings2 className="w-4 h-4" /> <span className="hidden sm:inline">Studio</span>
+            </Link>
             <button
               onClick={() => base44.auth.logout('/')}
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"

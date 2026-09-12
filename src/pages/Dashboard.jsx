@@ -165,10 +165,12 @@ function EventCard({ event, onQr }) {
 
   return (
     <div className="rounded-2xl bg-background border border-border p-5 hover:border-primary/40 transition">
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="font-heading text-lg font-semibold leading-snug">{event.name}</h3>
-        <span className={`shrink-0 text-[11px] px-2.5 py-1 rounded-full font-semibold ${cls}`}>{label}</span>
-      </div>
+      <Link to={`/event/${event.id}`} className="block">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-heading text-lg font-semibold leading-snug hover:text-accent transition">{event.name}</h3>
+          <span className={`shrink-0 text-[11px] px-2.5 py-1 rounded-full font-semibold ${cls}`}>{label}</span>
+        </div>
+      </Link>
 
       <div className="mt-3 space-y-1.5 text-sm text-muted-foreground">
         {event.event_date && (
@@ -193,11 +195,18 @@ function EventCard({ event, onQr }) {
       )}
 
       <div className="mt-5 flex gap-2">
+        <Link
+          to={`/event/${event.id}`}
+          className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition"
+        >
+          Open
+        </Link>
         <button
           onClick={onQr}
-          className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"
+          className="inline-flex items-center justify-center px-3.5 py-2.5 rounded-full border border-border hover:border-foreground/40 transition"
+          aria-label="QR code"
         >
-          <QrIcon className="w-4 h-4" /> QR code
+          <QrIcon className="w-4 h-4" />
         </button>
         <a
           href={guestUrl(event.qr_slug)}

@@ -1,0 +1,34 @@
+{
+  "name": "Favorite",
+  "properties": {
+    "device_id": {
+      "description": "Anonymous per-browser id so a guest can unstar their own picks",
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "guest_name": {
+      "description": "Optional name the guest typed",
+      "type": "string"
+    },
+    "photo_id": {
+      "type": "string"
+    },
+    "photo_url": {
+      "description": "Denormalised so the studio can view selects without a join",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "photo_id"
+  ],
+  "rls": {
+    "create": {},
+    "delete": {},
+    "read": {},
+    "update": {}
+  },
+  "type": "object"
+}

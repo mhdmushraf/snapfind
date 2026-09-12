@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import {
   ArrowLeft, Upload, Loader2, Images, QrCode as QrIcon, Settings2, Trash2,
   Check, Copy, ExternalLink, AlertTriangle, X, Heart, Download, ScanFace,
-  Scissors, Users, Eye, EyeOff,
+  Scissors, Users, Eye, EyeOff, IndianRupee, Link2,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
@@ -14,6 +14,8 @@ import { ensureStudio } from '@/lib/studio';
 import { guestUrl } from '@/lib/config';
 import { describeAll, analyzePhoto } from '@/lib/faces';
 import { hammingDistance, DUPLICATE_BITS, CULL_BELOW } from '@/lib/quality';
+import PeopleTab from '@/components/PeopleTab';
+import OrdersTab from '@/components/OrdersTab';
 
 export default function EventDetail() {
   const { id } = useParams();
@@ -178,7 +180,7 @@ export default function EventDetail() {
     );
   }
 
-  const url = guestUrl(event.qr_slug);
+  const url = guestUrl(event.qr_slug, studio);
   const unindexed = photos.filter((p) => !p.indexed).length;
   const suggested = photos.filter(
     (p) => !p.culled && p.indexed && ((p.quality_score ?? 100) < CULL_BELOW || p.eyes_closed || p.duplicate_of)
@@ -308,8 +310,10 @@ export default function EventDetail() {
           {[
             ['photos', 'Photos', Images],
             ['review', `Review${suggested.length ? ` (${suggested.length})` : ''}`, Scissors],
+            ['people', 'People', Users],
             ['selects', `Selects${selects.length ? ` (${selects.length})` : ''}`, Heart],
             ['guests', `Guests${sessions.length ? ` (${sessions.length})` : ''}`, Users],
+            ['orders', 'Orders', IndianRupee],
             ['share', 'Share', QrIcon],
             ['settings', 'Settings', Settings2],
           ].map(([k, label, Icon]) => (
@@ -356,6 +360,14 @@ export default function EventDetail() {
               )}
             </>
           )
+        )}
+
+        {tab === 'people' && (
+          <PeopleTab event={event} photos={photos} onSaved={load} />
+        )}
+
+        {tab === 'orders' && (
+          <OrdersTab event={event} studio={studio} />
         )}
 
         {tab === 'review' && (

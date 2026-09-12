@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { Camera, Loader2, ShieldCheck, Images, Clock } from 'lucide-react';
 import { LogoMark } from '@/components/Logo';
+import { thumbUrl, previewUrl } from '@/lib/storage';
 
 /**
  * Guest-facing page. This is where the QR code lands.
@@ -73,8 +74,8 @@ export default function GuestGallery() {
         <p className="mt-1 text-sm text-muted-foreground">{photos.length} photos</p>
         <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-2">
           {photos.map((p) => (
-            <a key={p.id} href={p.r2_key} target="_blank" rel="noreferrer" className="aspect-square rounded-xl overflow-hidden bg-muted block">
-              <img src={p.r2_key} alt="" loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+            <a key={p.id} href={previewUrl(p.r2_key)} target="_blank" rel="noreferrer" className="aspect-square rounded-xl overflow-hidden bg-muted block">
+              <img src={thumbUrl(p.r2_key, 400)} alt="" loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
             </a>
           ))}
         </div>

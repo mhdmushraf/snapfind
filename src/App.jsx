@@ -20,6 +20,7 @@ import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
 import EventDetail from '@/pages/EventDetail';
 import StudioSettings from '@/pages/StudioSettings';
+import StudioSite from '@/pages/StudioSite';
 import GuestGallery from '@/pages/GuestGallery';
 // Add page imports here
 
@@ -52,6 +53,9 @@ const AuthenticatedApp = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/g/:slug" element={<GuestGallery />} />
+      {/* Branded studio URLs. Kept LAST so every real route wins first. */}
+      <Route path="/:studioSlug/:eventSlug" element={<GuestGallery />} />
+      <Route path="/:studioSlug" element={<StudioSite />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/how-it-works" element={<Navigate to="/#how-it-works" replace />} />
@@ -70,8 +74,7 @@ const AuthenticatedApp = () => {
         <Route path="/event/:id" element={<EventDetail />} />
         <Route path="/studio-settings" element={<StudioSettings />} />
       </Route>
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
+      <Route path="*" element={<PageNotFound />} />    </Routes>
   );
 };
 

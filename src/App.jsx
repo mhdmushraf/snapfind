@@ -74,7 +74,8 @@ const AuthenticatedApp = () => {
         <Route path="/event/:id" element={<EventDetail />} />
         <Route path="/studio-settings" element={<StudioSettings />} />
       </Route>
-      <Route path="*" element={<PageNotFound />} />    </Routes>
+      <Route path="*" element={<PageNotFound />} />
+    </Routes>
   );
 };
 

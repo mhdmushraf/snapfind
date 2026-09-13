@@ -23,6 +23,7 @@ import StudioSettings from '@/pages/StudioSettings';
 import StudioSite from '@/pages/StudioSite';
 import StudioWebsite from '@/pages/StudioWebsite';
 import GuestGallery from '@/pages/GuestGallery';
+import AppLayout from '@/components/AppLayout';
 // Add page imports here
 
 const AuthenticatedApp = () => {
@@ -71,10 +72,12 @@ const AuthenticatedApp = () => {
         <Route path="/contact" element={<Contact />} />
       </Route>
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/event/:id" element={<EventDetail />} />
-        <Route path="/studio-settings" element={<StudioSettings />} />
-        <Route path="/studio-website" element={<StudioWebsite />} />
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/event/:id" element={<EventDetail />} />
+          <Route path="/studio-settings" element={<StudioSettings />} />
+          <Route path="/studio-website" element={<StudioWebsite />} />
+        </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

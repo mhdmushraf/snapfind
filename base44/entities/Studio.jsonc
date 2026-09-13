@@ -1,17 +1,28 @@
 {
   "name": "Studio",
   "properties": {
+    "about": {
+      "description": "A few sentences for the public studio page",
+      "type": "string"
+    },
     "city": {
       "type": "string"
     },
+    "cover_url": {
+      "description": "Hero image on the public studio page",
+      "format": "uri",
+      "type": "string"
+    },
     "custom_domain": {
-      "description": "e.g. gallery.menonstudio.com \u2014 used for QR codes and gallery links once DNS is pointed at the app",
       "type": "string"
     },
     "download_price": {
       "default": 49,
-      "description": "INR per full-resolution download",
       "type": "number"
+    },
+    "instagram": {
+      "description": "Handle without the @",
+      "type": "string"
     },
     "logo_url": {
       "format": "uri",
@@ -39,18 +50,33 @@
       ],
       "type": "string"
     },
+    "portfolio": {
+      "description": "JSON array of photo URLs chosen for the public studio page",
+      "type": "string"
+    },
     "print_price": {
       "default": 299,
-      "description": "INR per print",
       "type": "number"
+    },
+    "public_site": {
+      "default": true,
+      "description": "Show the public studio page at /<slug>",
+      "type": "boolean"
     },
     "r2_prefix": {
       "type": "string"
     },
     "revenue_share": {
       "default": 70,
-      "description": "Percent of guest orders kept by the studio",
       "type": "number"
+    },
+    "slug": {
+      "description": "URL handle, e.g. menon-studio \u2014 lives at snapfind.base44.app/menon-studio",
+      "type": "string"
+    },
+    "tagline": {
+      "description": "One line under the studio name",
+      "type": "string"
     },
     "watermark_url": {
       "format": "uri",

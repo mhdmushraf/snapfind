@@ -471,15 +471,29 @@ function Shell({ studio, children, wide }) {
       <div className={`flex-1 px-5 py-10 ${wide ? '' : 'flex items-center justify-center'}`}>
         <div className={`w-full mx-auto ${wide ? 'max-w-3xl' : 'max-w-md'}`}>
           <div className="flex items-center gap-2.5 mb-6">
-            {studio?.logo_url
-              ? <img src={thumbUrl(studio.logo_url, 200)} alt={studio.name} className="h-10 w-auto max-w-[10rem] object-contain" />
-              : <><LogoMark size={34} /><span className="font-heading font-bold">{studio?.name || 'Snapfind'}</span></>}
+            {studio?.slug ? (
+              <a href={`/${studio.slug}`} className="flex items-center gap-2.5 hover:opacity-80 transition">
+                {studio?.logo_url
+                  ? <img src={thumbUrl(studio.logo_url, 200)} alt={studio.name} className="h-10 w-auto max-w-[10rem] object-contain" />
+                  : <><LogoMark size={34} /><span className="font-heading font-bold">{studio.name}</span></>}
+              </a>
+            ) : studio?.logo_url ? (
+              <img src={thumbUrl(studio.logo_url, 200)} alt={studio.name} className="h-10 w-auto max-w-[10rem] object-contain" />
+            ) : (
+              <><LogoMark size={34} /><span className="font-heading font-bold">{studio?.name || 'Snapfind'}</span></>
+            )}
           </div>
           {children}
         </div>
       </div>
       <footer className="py-5 text-center text-[11px] text-muted-foreground">
-        Powered by Snapfind
+        {studio?.slug ? (
+          <a href={`/${studio.slug}`} className="hover:text-foreground transition">
+            Photos by {studio.name} · see their work
+          </a>
+        ) : (
+          'Powered by Snapfind'
+        )}
       </footer>
     </div>
   );

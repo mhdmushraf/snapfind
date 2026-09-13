@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import {
   ArrowLeft, Loader2, Check, Plus, Trash2, GripVertical, Eye, ExternalLink,
-  Palette, Type, LayoutTemplate, Images, Star,
+  Palette, Type, LayoutTemplate, Images, Star, Sparkles,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import StudioSite from '@/pages/StudioSite';
@@ -11,7 +11,7 @@ import PortfolioPicker from '@/components/PortfolioPicker';
 import { ensureStudio } from '@/lib/studio';
 import { studioUrl } from '@/lib/config';
 import {
-  ACCENTS, MODES, HEADINGS, HEROES, ALL_SECTIONS,
+  ACCENTS, MODES, HEADINGS, HEROES, ALL_SECTIONS, TEMPLATES, PORTFOLIO_LAYOUTS,
   DEFAULT_SECTIONS, themeOf, parseJson,
 } from '@/lib/studio-theme';
 
@@ -110,6 +110,19 @@ export default function StudioWebsite() {
             </p>
           )}
 
+          {/* Template */}
+          <Card icon={Sparkles} title="Style">
+            <div className="grid gap-2">
+              {Object.entries(TEMPLATES).map(([k, t]) => (
+                <button key={k} onClick={() => setTheme('template', k)}
+                  className={`px-4 py-3 rounded-xl text-left border transition ${theme.template === k ? 'border-accent bg-accent/5' : 'border-border hover:border-foreground/30'}`}>
+                  <span className="block text-sm font-semibold">{t.label}</span>
+                  <span className="block text-xs text-muted-foreground mt-0.5">{t.blurb}</span>
+                </button>
+              ))}
+            </div>
+          </Card>
+
           {/* Look */}
           <Card icon={Palette} title="Colour">
             <div className="grid grid-cols-3 gap-2">
@@ -140,6 +153,26 @@ export default function StudioWebsite() {
                 </button>
               ))}
             </div>
+          </Card>
+
+          <Card icon={Images} title="Portfolio layout">
+            <div className="grid gap-2">
+              {Object.entries(PORTFOLIO_LAYOUTS).map(([k, label]) => (
+                <button key={k} onClick={() => setTheme('portfolio', k)}
+                  className={`px-4 py-3 rounded-xl text-sm font-medium text-left border transition ${theme.portfolio === k ? 'border-accent bg-accent/5' : 'border-border hover:border-foreground/30'}`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+            <label className="mt-4 flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" checked={theme.motion !== false}
+                onChange={(e) => setTheme('motion', e.target.checked)}
+                className="mt-0.5 w-4 h-4 accent-[hsl(var(--accent))]" />
+              <span className="text-sm">
+                Fade sections in on scroll
+                <span className="block text-xs text-muted-foreground mt-0.5">Automatically off for visitors who prefer reduced motion.</span>
+              </span>
+            </label>
           </Card>
 
           {/* Sections */}

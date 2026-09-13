@@ -87,6 +87,10 @@ export default function StudioSettings() {
     );
   }
 
+  const portfolioCount = (() => {
+    try { return studio?.portfolio ? JSON.parse(studio.portfolio).length : 0; } catch { return 0; }
+  })();
+
   return (
     <div className="min-h-screen bg-secondary/25">
       <header className="bg-background border-b border-border sticky top-0 z-40">
@@ -394,6 +398,14 @@ export default function StudioSettings() {
           </div>
         </section>
       </main>
+
+      {picking && (
+        <PortfolioPicker
+          studio={studio}
+          onClose={() => setPicking(false)}
+          onSave={(list) => setStudio((s) => ({ ...s, portfolio: JSON.stringify(list) }))}
+        />
+      )}
     </div>
   );
 }

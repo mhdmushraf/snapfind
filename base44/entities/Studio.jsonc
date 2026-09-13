@@ -2,14 +2,12 @@
   "name": "Studio",
   "properties": {
     "about": {
-      "description": "A few sentences for the public studio page",
       "type": "string"
     },
     "city": {
       "type": "string"
     },
     "cover_url": {
-      "description": "Hero image on the public studio page",
       "format": "uri",
       "type": "string"
     },
@@ -20,8 +18,11 @@
       "default": 49,
       "type": "number"
     },
+    "faqs": {
+      "description": "JSON array of {q,a}",
+      "type": "string"
+    },
     "instagram": {
-      "description": "Handle without the @",
       "type": "string"
     },
     "logo_url": {
@@ -32,6 +33,10 @@
       "type": "string"
     },
     "owner_email": {
+      "type": "string"
+    },
+    "packages": {
+      "description": "JSON array of {name, price, unit, features[], popular}",
       "type": "string"
     },
     "phone": {
@@ -51,7 +56,7 @@
       "type": "string"
     },
     "portfolio": {
-      "description": "JSON array of photo URLs chosen for the public studio page",
+      "description": "JSON array of photo URLs",
       "type": "string"
     },
     "print_price": {
@@ -60,7 +65,6 @@
     },
     "public_site": {
       "default": true,
-      "description": "Show the public studio page at /<slug>",
       "type": "boolean"
     },
     "r2_prefix": {
@@ -70,16 +74,34 @@
       "default": 70,
       "type": "number"
     },
+    "sections": {
+      "description": "JSON array of enabled section ids in display order",
+      "type": "string"
+    },
+    "services": {
+      "description": "JSON array of {title, body} \u2014 what the studio shoots",
+      "type": "string"
+    },
     "slug": {
-      "description": "URL handle, e.g. menon-studio \u2014 lives at snapfind.base44.app/menon-studio",
       "type": "string"
     },
     "tagline": {
-      "description": "One line under the studio name",
+      "type": "string"
+    },
+    "testimonials": {
+      "description": "JSON array of {quote, name, detail}",
+      "type": "string"
+    },
+    "theme": {
+      "description": "JSON: {accent, mode, heading, hero}",
       "type": "string"
     },
     "watermark_url": {
       "format": "uri",
+      "type": "string"
+    },
+    "website": {
+      "description": "External website link, if they have one",
       "type": "string"
     }
   },

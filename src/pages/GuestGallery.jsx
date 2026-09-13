@@ -26,7 +26,11 @@ const downloadUrl = (url) =>
   url?.includes('/upload/') ? url.replace('/upload/', '/upload/fl_attachment/') : url;
 
 export default function GuestGallery() {
-  const { slug } = useParams();
+  // Two URL shapes reach here:
+  //   /g/:slug                    legacy, keeps printed QR codes alive forever
+  //   /:studioSlug/:eventSlug     branded
+  const params = useParams();
+  const slug = params.eventSlug || params.slug;
   const [event, setEvent] = useState(null);
   const [studio, setStudio] = useState(null);
   const [photos, setPhotos] = useState([]);

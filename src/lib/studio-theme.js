@@ -7,6 +7,66 @@
  * results than a colour picker and a font dropdown.
  */
 
+/**
+ * Layout templates. These change STRUCTURE, not just colour — different
+ * hero shapes, section rhythm, type scale and portfolio behaviour. A studio
+ * picks one and gets a genuinely different-looking site.
+ */
+export const TEMPLATES = {
+  editorial: {
+    label: 'Editorial',
+    blurb: 'Big type, generous space, magazine feel',
+    heroPad: 'py-28 sm:py-44',
+    titleSize: 'text-5xl sm:text-8xl',
+    titleWeight: 'font-extrabold',
+    sectionPad: 'py-20 sm:py-32',
+    h2: 'text-3xl sm:text-5xl font-bold',
+    rounded: 'rounded-2xl',
+    uppercaseLabels: true,
+  },
+  gallery: {
+    label: 'Gallery',
+    blurb: 'Photos first, text stays out of the way',
+    heroPad: 'py-20 sm:py-28',
+    titleSize: 'text-4xl sm:text-6xl',
+    titleWeight: 'font-bold',
+    sectionPad: 'py-14 sm:py-20',
+    h2: 'text-2xl sm:text-3xl font-semibold',
+    rounded: 'rounded-none',
+    uppercaseLabels: false,
+  },
+  bold: {
+    label: 'Bold',
+    blurb: 'Heavy type, strong colour blocks',
+    heroPad: 'py-24 sm:py-36',
+    titleSize: 'text-6xl sm:text-9xl',
+    titleWeight: 'font-black',
+    sectionPad: 'py-20 sm:py-28',
+    h2: 'text-4xl sm:text-6xl font-black',
+    rounded: 'rounded-3xl',
+    uppercaseLabels: true,
+  },
+  quiet: {
+    label: 'Quiet',
+    blurb: 'Small type, lots of air, understated',
+    heroPad: 'py-32 sm:py-48',
+    titleSize: 'text-3xl sm:text-5xl',
+    titleWeight: 'font-medium',
+    sectionPad: 'py-24 sm:py-36',
+    h2: 'text-xl sm:text-2xl font-medium',
+    rounded: 'rounded-xl',
+    uppercaseLabels: false,
+  },
+};
+
+/** How the portfolio grid behaves. */
+export const PORTFOLIO_LAYOUTS = {
+  masonry:   'Masonry — mixed heights',
+  grid:      'Grid — even squares',
+  alternating: 'Alternating — large and small',
+  filmstrip: 'Filmstrip — horizontal scroll',
+};
+
 export const ACCENTS = {
   coral:   { label: 'Coral',   hsl: '9 92% 62%',   ink: '0 0% 100%' },
   gold:    { label: 'Gold',    hsl: '38 78% 52%',  ink: '20 14% 11%' },
@@ -59,12 +119,17 @@ export const ALL_SECTIONS = [
   ['contact',      'Contact'],
 ];
 
-export const DEFAULT_THEME = { accent: 'coral', mode: 'light', heading: 'sans', hero: 'full' };
+export const DEFAULT_THEME = {
+  accent: 'coral', mode: 'light', heading: 'sans', hero: 'full',
+  template: 'editorial', portfolio: 'masonry', motion: true,
+};
 export const DEFAULT_SECTIONS = ['about', 'portfolio', 'services', 'packages', 'testimonials', 'contact'];
 
 export const parseJson = (raw, fallback) => {
   try { return raw ? JSON.parse(raw) : fallback; } catch { return fallback; }
 };
+
+export const templateOf = (theme) => TEMPLATES[theme?.template] || TEMPLATES.editorial;
 
 export const themeOf = (studio) => ({ ...DEFAULT_THEME, ...parseJson(studio?.theme, {}) });
 

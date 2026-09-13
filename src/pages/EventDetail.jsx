@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import {
   ArrowLeft, Upload, Loader2, Images, QrCode as QrIcon, Settings2, Trash2,
@@ -21,9 +21,9 @@ export default function EventDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const fileInput = useRef(null);
+  const { studio } = useOutletContext();
 
   const [event, setEvent] = useState(null);
-  const [studio, setStudio] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [selects, setSelects] = useState([]);
   const [sessions, setSessions] = useState([]);
@@ -40,13 +40,11 @@ export default function EventDetail() {
     try {
       const e = await base44.entities.Event.get(id);
       setEvent(e);
-      const [s, p, f, g] = await Promise.all([
-        base44.entities.Studio.filter({ id: e.studio_id }),
+      const [p, f, g] = await Promise.all([
         base44.entities.Photo.filter({ event_id: id }, 'sort_order', 200),
         base44.entities.Favorite.filter({ event_id: id }),
         base44.entities.GuestSession.filter({ event_id: id }, '-created_date', 100),
       ]);
-      setStudio(s?.[0] || null);
       setPhotos(p || []);
       setSelects(f || []);
       setSessions(g || []);
@@ -169,13 +167,13 @@ export default function EventDetail() {
   };
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-accent" /></div>;
+    return <div className="py-24 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-accent" /></div>;
   }
   if (!event) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+      <div className="py-24 flex flex-col items-center justify-center gap-4">
         <p className="text-muted-foreground">Event not found.</p>
-        <Link to="/dashboard" className="text-accent font-medium hover:underline">Back to dashboard</Link>
+        <Link to="/dashboard" className="text-accent font-medium hover:underline">Back to events</Link>
       </div>
     );
   }
@@ -189,17 +187,12 @@ export default function EventDetail() {
   const missed = sessions.filter((s) => s.match_count === 0);
 
   return (
-    <div className="min-h-screen bg-secondary/25">
-      <header className="bg-background border-b border-border sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-          <Logo to="/dashboard" />
-          <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition">
-            <ArrowLeft className="w-4 h-4" /> All events
-          </Link>
-        </div>
-      </header>
+    <div>
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-8">
+        <Link to="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition mb-5">
+          <ArrowLeft className="w-4 h-4" /> All events
+        </Link>
 
-      <main className="max-w-6xl mx-auto px-5 sm:px-8 py-8">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-7">
           <div>
             <h1 className="font-heading text-3xl font-bold">{event.name}</h1>
@@ -659,7 +652,7 @@ export default function EventDetail() {
             </button>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

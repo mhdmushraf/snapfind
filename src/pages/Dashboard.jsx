@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import {
   Plus, LogOut, Calendar, MapPin, Images, Users, QrCode as QrIcon,
@@ -27,32 +27,27 @@ const STATUS = {
 };
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null);
-  const [studio, setStudio] = useState(null);
+  const { studio, user } = useOutletContext();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showNew, setShowNew] = useState(false);
   const [qrFor, setQrFor] = useState(null);
 
   const load = useCallback(async () => {
+    if (!studio) return;
     try {
-      const { user: me, studio: s } = await ensureStudio();
-      setUser(me);
-      setStudio(s);
-      const list = await base44.entities.Event.filter({ studio_id: s.id }, '-event_date');
+      const list = await base44.entities.Event.filter({ studio_id: studio.id }, '-event_date');
       setEvents(list || []);
-    } catch {
-      // handled by ProtectedRoute
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [studio]);
 
   useEffect(() => { load(); }, [load]);
 
   if (loading) {
     return (
-      <div className="pt-24 flex items-center justify-center min-h-[60vh]">
+      <div className="py-24 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-accent" />
       </div>
     );
@@ -62,36 +57,8 @@ export default function Dashboard() {
   const liveCount = events.filter((e) => e.status === 'live').length;
 
   return (
-    <div className="min-h-screen bg-secondary/25">
-      {/* Top bar */}
-      <header className="bg-background border-b border-border sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-          <Logo to="/dashboard" />
-          <div className="flex items-center gap-2">
-            <span className="hidden sm:block text-sm text-muted-foreground mr-1">{studio?.name || user?.full_name}</span>
-            <Link
-              to="/studio-website"
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"
-            >
-              <Globe className="w-4 h-4" /> <span className="hidden sm:inline">Website</span>
-            </Link>
-            <Link
-              to="/studio-settings"
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"
-            >
-              <Settings2 className="w-4 h-4" /> <span className="hidden sm:inline">Studio</span>
-            </Link>
-            <button
-              onClick={() => base44.auth.logout('/')}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"
-            >
-              <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">Sign out</span>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-5 sm:px-8 py-10">
+    <div>
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
             <h1 className="font-heading text-3xl sm:text-4xl font-bold">
@@ -138,7 +105,7 @@ export default function Dashboard() {
             ))}
           </div>
         )}
-      </main>
+      </div>
 
       {showNew && (
         <NewEventModal

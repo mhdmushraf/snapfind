@@ -5,6 +5,8 @@ import { ArrowLeft, Loader2, Upload, Check, Trash2, Building2, MapPin, Phone, Gl
 import Logo from '@/components/Logo';
 import { STORAGE, storageReady, thumbUrl } from '@/lib/storage';
 import { ensureStudio } from '@/lib/studio';
+import { slugify, isValidSlug, studioUrl, PUBLIC_BASE_URL } from '@/lib/config';
+import PortfolioPicker from '@/components/PortfolioPicker';
 
 async function uploadLogo(file) {
   const form = new FormData();
@@ -31,12 +33,16 @@ export default function StudioSettings() {
   const [team, setTeam] = useState([]);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('shooter');
+  const [slugInput, setSlugInput] = useState('');
+  const [slugError, setSlugError] = useState('');
+  const [picking, setPicking] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const { studio: s } = await ensureStudio();
         setStudio(s);
+        setSlugInput(s.slug || slugify(s.name));
         const t = await base44.entities.TeamMember.filter({ studio_id: s.id });
         setTeam((t || []).filter((m) => m.status !== 'removed'));
       } catch {
@@ -142,6 +148,114 @@ export default function StudioSettings() {
           <p className="text-xs text-muted-foreground">
             Guests see your number on their gallery so they can reach you directly.
           </p>
+        </section>
+
+        {/* Public studio page */}
+        <section className="rounded-2xl bg-background border border-border p-6">
+          <h2 className="font-heading text-lg font-semibold">Your public page</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Every guest who scans your QR sees your studio name. This is the page that turns
+            that into an enquiry.
+          </p>
+
+          <label className="block mt-5">
+            <span className="text-sm font-medium">Studio handle</span>
+            <div className="mt-2 flex items-stretch rounded-xl border border-input overflow-hidden focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
+              <span className="px-3 flex items-center text-xs text-muted-foreground bg-muted/50 border-r border-input whitespace-nowrap">
+                {PUBLIC_BASE_URL.replace('https://', '')}/
+              </span>
+              <input
+                value={slugInput}
+                onChange={(e) => { setSlugInput(slugify(e.target.value)); setSlugError(''); }}
+                onBlur={async () => {
+                  const s = slugify(slugInput);
+                  if (s === (studio.slug || '')) return;
+                  if (!isValidSlug(s)) {
+                    setSlugError('Use 3+ letters, numbers and dashes. Some words are reserved.');
+                    return;
+                  }
+                  const taken = await base44.entities.Studio.filter({ slug: s });
+                  if (taken?.length && taken[0].id !== studio.id) {
+                    setSlugError('That handle is taken. Try another.');
+                    return;
+                  }
+                  patch({ slug: s });
+                }}
+                className="flex-1 px-3 py-3 text-sm outline-none bg-background"
+                placeholder="menon-studio"
+              />
+            </div>
+            {slugError
+              ? <p className="mt-2 text-sm text-destructive">{slugError}</p>
+              : studio.slug && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Live at{' '}
+                  <a href={studioUrl(studio)} target="_blank" rel="noreferrer" className="text-accent hover:underline">
+                    {studioUrl(studio).replace('https://', '')}
+                  </a>
+                  {' '}· galleries now use {studio.slug}/&lt;event&gt;
+                </p>
+              )}
+          </label>
+
+          <label className="block mt-5">
+            <span className="text-sm font-medium">Tagline</span>
+            <input
+              defaultValue={studio.tagline || ''}
+              onBlur={(e) => patch({ tagline: e.target.value })}
+              className="input mt-2" placeholder="Wedding stories from Kerala, told honestly."
+            />
+          </label>
+
+          <label className="block mt-4">
+            <span className="text-sm font-medium">About</span>
+            <textarea
+              rows={4}
+              defaultValue={studio.about || ''}
+              onBlur={(e) => patch({ about: e.target.value })}
+              className="input mt-2 resize-none"
+              placeholder="Who you are, how you shoot, how many weddings a year…"
+            />
+          </label>
+
+          <label className="block mt-4">
+            <span className="text-sm font-medium">Instagram handle</span>
+            <input
+              defaultValue={studio.instagram || ''}
+              onBlur={(e) => patch({ instagram: e.target.value.replace('@', '') })}
+              className="input mt-2" placeholder="menonweddings"
+            />
+          </label>
+
+          <div className="mt-5 flex items-center justify-between rounded-xl border border-border p-4">
+            <div>
+              <div className="text-sm font-medium">Portfolio photos</div>
+              <div className="text-xs text-muted-foreground mt-0.5">
+                {portfolioCount} selected · shown on your public page
+              </div>
+            </div>
+            <button
+              onClick={() => setPicking(true)}
+              className="px-4 py-2.5 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"
+            >
+              Choose photos
+            </button>
+          </div>
+
+          <label className="mt-4 flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={studio.public_site !== false}
+              onChange={(e) => patch({ public_site: e.target.checked })}
+              className="mt-0.5 w-4 h-4 accent-[hsl(var(--accent))]"
+            />
+            <span className="text-sm">
+              Show my public page
+              <span className="block text-xs text-muted-foreground mt-0.5">
+                Turn off and the page 404s. Guest galleries keep working either way.
+              </span>
+            </span>
+          </label>
         </section>
 
         {/* Team */}

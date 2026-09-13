@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { ArrowLeft, Loader2, Upload, Check, Trash2, Building2, MapPin, Phone, Globe, UserPlus, X, IndianRupee } from 'lucide-react';
 import Logo from '@/components/Logo';
@@ -25,8 +25,8 @@ export default function StudioSettings() {
   const navigate = useNavigate();
   const logoInput = useRef(null);
   const markInput = useRef(null);
+  const { studio, setStudio } = useOutletContext();
 
-  const [studio, setStudio] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState('');
   const [saved, setSaved] = useState(false);
@@ -38,20 +38,13 @@ export default function StudioSettings() {
   const [picking, setPicking] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { studio: s } = await ensureStudio();
-        setStudio(s);
-        setSlugInput(s.slug || slugify(s.name));
-        const t = await base44.entities.TeamMember.filter({ studio_id: s.id });
-        setTeam((t || []).filter((m) => m.status !== 'removed'));
-      } catch {
-        setStudio(null);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+    if (!studio) return;
+    setSlugInput(studio.slug || slugify(studio.name));
+    base44.entities.TeamMember.filter({ studio_id: studio.id })
+      .then((t) => setTeam((t || []).filter((m) => m.status !== 'removed')))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [studio]);
 
   const patch = async (fields) => {
     setStudio((s) => ({ ...s, ...fields }));
@@ -75,16 +68,8 @@ export default function StudioSettings() {
     }
   };
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-accent" /></div>;
-  }
-  if (!studio) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center">
-        <p className="text-muted-foreground">Couldn't load your studio. Try signing out and back in.</p>
-        <Link to="/dashboard" className="text-accent font-medium hover:underline">Back to dashboard</Link>
-      </div>
-    );
+  if (loading || !studio) {
+    return <div className="py-24 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-accent" /></div>;
   }
 
   const portfolioCount = (() => {
@@ -92,17 +77,8 @@ export default function StudioSettings() {
   })();
 
   return (
-    <div className="min-h-screen bg-secondary/25">
-      <header className="bg-background border-b border-border sticky top-0 z-40">
-        <div className="max-w-3xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-          <Logo to="/dashboard" />
-          <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition">
-            <ArrowLeft className="w-4 h-4" /> Dashboard
-          </Link>
-        </div>
-      </header>
-
-      <main className="max-w-3xl mx-auto px-5 sm:px-8 py-8 space-y-5">
+    <div>
+      <div className="max-w-3xl mx-auto px-5 sm:px-8 py-8 space-y-5">
         <div className="flex items-center justify-between">
           <h1 className="font-heading text-3xl font-bold">Studio settings</h1>
           {saved && <span className="inline-flex items-center gap-1.5 text-sm text-accent font-medium"><Check className="w-4 h-4" /> Saved</span>}
@@ -397,7 +373,7 @@ export default function StudioSettings() {
             </Link>
           </div>
         </section>
-      </main>
+      </div>
 
       {picking && (
         <PortfolioPicker

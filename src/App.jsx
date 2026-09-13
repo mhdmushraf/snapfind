@@ -21,6 +21,7 @@ import Dashboard from '@/pages/Dashboard';
 import EventDetail from '@/pages/EventDetail';
 import StudioSettings from '@/pages/StudioSettings';
 import StudioSite from '@/pages/StudioSite';
+import StudioWebsite from '@/pages/StudioWebsite';
 import GuestGallery from '@/pages/GuestGallery';
 // Add page imports here
 
@@ -73,6 +74,7 @@ const AuthenticatedApp = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/event/:id" element={<EventDetail />} />
         <Route path="/studio-settings" element={<StudioSettings />} />
+        <Route path="/studio-website" element={<StudioWebsite />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

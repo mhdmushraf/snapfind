@@ -7,7 +7,9 @@ import {
 } from 'lucide-react';
 import { LogoMark } from '@/components/Logo';
 import { thumbUrl, previewUrl } from '@/lib/storage';
-import { themeOf, themeVars, parseJson, DEFAULT_SECTIONS } from '@/lib/studio-theme';
+import { themeOf, themeVars, parseJson, templateOf, DEFAULT_SECTIONS } from '@/lib/studio-theme';
+import Reveal from '@/components/Reveal';
+import PortfolioGrid from '@/components/PortfolioGrid';
 
 /**
  * Public studio website at /<studio-slug>.
@@ -48,6 +50,8 @@ export default function StudioSite({ preview }) {
   }
 
   const theme = themeOf(studio);
+  const T = templateOf(theme);
+  const motion = theme.motion !== false;
   const sections = parseJson(studio.sections, DEFAULT_SECTIONS);
   const portfolio = parseJson(studio.portfolio, []);
   const services = parseJson(studio.services, []);
@@ -59,11 +63,18 @@ export default function StudioSite({ preview }) {
 
   const Band = ({ children, alt }) => (
     <section style={alt ? { background: 'hsl(var(--s-band))' } : undefined}>
-      <div className="max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-24">{children}</div>
+      <div className={`max-w-5xl mx-auto px-5 sm:px-8 ${T.sectionPad}`}>
+        <Reveal enabled={motion}>{children}</Reveal>
+      </div>
     </section>
   );
   const H2 = ({ children }) => (
-    <h2 className="text-3xl sm:text-4xl font-bold text-balance" style={{ fontFamily: 'var(--s-heading)' }}>{children}</h2>
+    <h2
+      className={`${T.h2} text-balance ${T.uppercaseLabels ? 'uppercase tracking-tight' : ''}`}
+      style={{ fontFamily: 'var(--s-heading)' }}
+    >
+      {children}
+    </h2>
   );
 
   const body = {
@@ -79,16 +90,20 @@ export default function StudioSite({ preview }) {
     ),
 
     portfolio: portfolio.length > 0 && (
-      <Band key="portfolio">
-        <H2>Work</H2>
-        <div className="mt-8 columns-2 sm:columns-3 gap-3">
-          {portfolio.map((src, i) => (
-            <button key={i} onClick={() => setLightbox(src)} className="mb-3 block w-full break-inside-avoid overflow-hidden rounded-2xl group">
-              <img src={thumbUrl(src, 700)} alt="" loading="lazy" className="w-full h-auto object-cover group-hover:scale-[1.03] transition-transform duration-500" />
-            </button>
-          ))}
+      <section key="portfolio">
+        <div className={`max-w-5xl mx-auto px-5 sm:px-8 ${T.sectionPad}`}>
+          <Reveal enabled={motion}><H2>Work</H2></Reveal>
+          <div className="mt-8">
+            <PortfolioGrid
+              photos={portfolio}
+              layout={theme.portfolio}
+              rounded={T.rounded}
+              motion={motion}
+              onOpen={setLightbox}
+            />
+          </div>
         </div>
-      </Band>
+      </section>
     ),
 
     services: services.length > 0 && (

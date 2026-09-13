@@ -231,21 +231,21 @@ export default function StudioSite({ preview }) {
     <div style={{ ...themeVars(theme), background: 'hsl(var(--s-bg))', color: 'hsl(var(--s-fg))' }} className="min-h-screen">
       {/* Hero */}
       {theme.hero === 'minimal' || !hero ? (
-        <header className="max-w-5xl mx-auto px-5 sm:px-8 pt-24 pb-16">
+        <header className={`max-w-5xl mx-auto px-5 sm:px-8 ${T.heroPad}`}>
           <StudioMark studio={studio} />
-          <h1 className="mt-6 text-5xl sm:text-7xl font-extrabold text-balance" style={{ fontFamily: 'var(--s-heading)' }}>{studio.name}</h1>
+          <h1 className={`mt-6 ${T.titleSize} ${T.titleWeight} text-balance ${T.uppercaseLabels ? 'uppercase tracking-tighter' : ''}`} style={{ fontFamily: 'var(--s-heading)' }}>{studio.name}</h1>
           {studio.tagline && <p className="mt-5 text-xl max-w-xl" style={{ color: 'hsl(var(--s-muted-fg))' }}>{studio.tagline}</p>}
           <Meta studio={studio} wa={wa} />
         </header>
       ) : theme.hero === 'split' ? (
-        <header className="max-w-6xl mx-auto px-5 sm:px-8 pt-16 pb-12 grid lg:grid-cols-2 gap-10 items-center">
+        <header className={`max-w-6xl mx-auto px-5 sm:px-8 ${T.heroPad} grid lg:grid-cols-2 gap-10 items-center`}>
           <div>
             <StudioMark studio={studio} />
-            <h1 className="mt-6 text-4xl sm:text-6xl font-extrabold text-balance" style={{ fontFamily: 'var(--s-heading)' }}>{studio.name}</h1>
+            <h1 className={`mt-6 ${T.titleSize} ${T.titleWeight} text-balance ${T.uppercaseLabels ? 'uppercase tracking-tighter' : ''}`} style={{ fontFamily: 'var(--s-heading)' }}>{studio.name}</h1>
             {studio.tagline && <p className="mt-5 text-lg" style={{ color: 'hsl(var(--s-muted-fg))' }}>{studio.tagline}</p>}
             <Meta studio={studio} wa={wa} />
           </div>
-          <img src={previewUrl(hero, 1400)} alt="" className="w-full h-[26rem] object-cover rounded-3xl" />
+          <img src={previewUrl(hero, 1400)} alt="" className={`w-full h-[26rem] object-cover ${T.rounded === 'rounded-none' ? '' : 'rounded-3xl'}`} />
         </header>
       ) : (
         <header className="relative">
@@ -253,9 +253,9 @@ export default function StudioSite({ preview }) {
             <img src={previewUrl(hero, 2000)} alt="" className="w-full h-full object-cover" />
             <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, hsl(var(--s-bg)) 2%, hsl(var(--s-bg) / 0.45) 60%, hsl(var(--s-bg) / 0.2))' }} />
           </div>
-          <div className="relative max-w-5xl mx-auto px-5 sm:px-8 py-28 sm:py-40">
+          <div className={`relative max-w-5xl mx-auto px-5 sm:px-8 ${T.heroPad}`}>
             <StudioMark studio={studio} />
-            <h1 className="mt-6 text-5xl sm:text-7xl font-extrabold text-balance" style={{ fontFamily: 'var(--s-heading)' }}>{studio.name}</h1>
+            <h1 className={`mt-6 ${T.titleSize} ${T.titleWeight} text-balance ${T.uppercaseLabels ? 'uppercase tracking-tighter' : ''}`} style={{ fontFamily: 'var(--s-heading)' }}>{studio.name}</h1>
             {studio.tagline && <p className="mt-5 text-xl max-w-xl" style={{ color: 'hsl(var(--s-muted-fg))' }}>{studio.tagline}</p>}
             <Meta studio={studio} wa={wa} />
           </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import {
   ArrowLeft, Loader2, Check, Plus, Trash2, GripVertical, Eye, ExternalLink,
@@ -20,22 +20,13 @@ import {
  * real public page component, so what they configure is exactly what ships.
  */
 export default function StudioWebsite() {
-  const [studio, setStudio] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { studio, setStudio } = useOutletContext();
   const [saved, setSaved] = useState(false);
   const [picking, setPicking] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      try { const { studio: s } = await ensureStudio(); setStudio(s); }
-      finally { setLoading(false); }
-    })();
-  }, []);
-
   const patch = async (fields) => {
-    const next = { ...studio, ...fields };
-    setStudio(next);
+    setStudio((s) => ({ ...s, ...fields }));
     await base44.entities.Studio.update(studio.id, fields).catch(() => {});
     setSaved(true);
     setTimeout(() => setSaved(false), 1500);
@@ -43,16 +34,8 @@ export default function StudioWebsite() {
 
   const patchJson = (key, value) => patch({ [key]: JSON.stringify(value) });
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-accent" /></div>;
-  }
   if (!studio) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p className="text-muted-foreground">Couldn't load your studio.</p>
-        <Link to="/dashboard" className="text-accent font-medium hover:underline">Back to dashboard</Link>
-      </div>
-    );
+    return <div className="py-24 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-accent" /></div>;
   }
 
   const theme = themeOf(studio);
@@ -79,31 +62,27 @@ export default function StudioWebsite() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary/25">
-      <header className="bg-background border-b border-border sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between gap-3">
-          <Logo to="/dashboard" />
-          <div className="flex items-center gap-2">
-            {saved && <span className="hidden sm:inline-flex items-center gap-1.5 text-sm text-accent font-medium"><Check className="w-4 h-4" /> Saved</span>}
-            <button onClick={() => setShowPreview((v) => !v)} className="lg:hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border text-sm font-medium">
-              <Eye className="w-4 h-4" /> {showPreview ? 'Edit' : 'Preview'}
-            </button>
-            {studio.slug && (
-              <a href={studioUrl(studio)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition">
-                <ExternalLink className="w-4 h-4" /> <span className="hidden sm:inline">Open</span>
-              </a>
-            )}
-            <Link to="/studio-settings" className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition">
-              <ArrowLeft className="w-4 h-4" /> <span className="hidden sm:inline">Settings</span>
-            </Link>
-          </div>
+    <div>
+      {/* Editor toolbar */}
+      <div className="bg-background border-b border-border px-5 sm:px-8 h-14 flex items-center justify-between gap-3">
+        <h1 className="font-heading text-lg font-bold">Your website</h1>
+        <div className="flex items-center gap-2">
+          {saved && <span className="hidden sm:inline-flex items-center gap-1.5 text-sm text-accent font-medium"><Check className="w-4 h-4" /> Saved</span>}
+          <button onClick={() => setShowPreview((v) => !v)} className="lg:hidden inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border text-sm font-medium">
+            <Eye className="w-4 h-4" /> {showPreview ? 'Edit' : 'Preview'}
+          </button>
+          {studio.slug && (
+            <a href={studioUrl(studio)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition">
+              <ExternalLink className="w-4 h-4" /> <span className="hidden sm:inline">Open</span>
+            </a>
+          )}
         </div>
-      </header>
+      </div>
 
-      <div className="max-w-7xl mx-auto lg:grid lg:grid-cols-[26rem_1fr] lg:gap-0">
+      <div className="xl:grid xl:grid-cols-[24rem_1fr]">
         {/* Controls */}
-        <div className={`${showPreview ? 'hidden lg:block' : ''} px-5 sm:px-8 py-8 space-y-5 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto`}>
-          <h1 className="font-heading text-2xl font-bold">Your website</h1>
+        <div className={`${showPreview ? 'hidden xl:block' : ''} px-5 sm:px-8 py-8 space-y-5 xl:max-h-[calc(100vh-3.5rem)] xl:overflow-y-auto`}>
+          <h1 className="font-heading text-2xl font-bold sr-only">Website editor</h1>
           {!studio.slug && (
             <p className="rounded-xl bg-accent/5 border border-accent/30 p-4 text-sm">
               Set a studio handle in <Link to="/studio-settings" className="text-accent font-medium hover:underline">Settings</Link> to publish this page.
@@ -231,9 +210,9 @@ export default function StudioWebsite() {
         </div>
 
         {/* Live preview */}
-        <div className={`${showPreview ? '' : 'hidden lg:block'} border-l border-border bg-muted/20`}>
-          <div className="lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] overflow-y-auto">
-            <div className="origin-top scale-[0.85] lg:scale-100 pointer-events-none">
+        <div className={`${showPreview ? '' : 'hidden xl:block'} border-l border-border bg-muted/20`}>
+          <div className="xl:sticky xl:top-0 xl:h-[calc(100vh-3.5rem)] overflow-y-auto">
+            <div className="pointer-events-none">
               <StudioSite preview={studio} />
             </div>
           </div>

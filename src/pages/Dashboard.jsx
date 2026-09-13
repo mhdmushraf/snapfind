@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import {
   Plus, LogOut, Calendar, MapPin, Images, Users, QrCode as QrIcon,
-  Loader2, X, Copy, Check, ExternalLink, Sparkles, Settings2, Link2,
+  Loader2, X, Copy, Check, ExternalLink, Sparkles, Settings2, Link2, Globe,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import QRCode from '@/components/QRCode';
@@ -69,6 +69,12 @@ export default function Dashboard() {
           <Logo to="/dashboard" />
           <div className="flex items-center gap-2">
             <span className="hidden sm:block text-sm text-muted-foreground mr-1">{studio?.name || user?.full_name}</span>
+            <Link
+              to="/studio-website"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"
+            >
+              <Globe className="w-4 h-4" /> <span className="hidden sm:inline">Website</span>
+            </Link>
             <Link
               to="/studio-settings"
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-border text-sm font-medium hover:border-foreground/40 transition"
